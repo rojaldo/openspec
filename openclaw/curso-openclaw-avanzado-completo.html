@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦞 Curso: OpenClaw Avanzado — De Usuario a Power User</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --heading: #f0f6fc;
+    --accent: #d29922;
+    --accent2: #58a6ff;
+    --code-bg: #0a0e14;
+    --code-text: #e6edf3;
+    --green: #3fb950;
+    --red: #f85149;
+    --muted: #8b949e;
+    --hero1: #1a1c24;
+    --hero2: #2a1e12;
+  }
+  html[data-theme="light"] {
+    --bg: #f6f8fa;
+    --surface: #ffffff;
+    --border: #d0d7de;
+    --text: #24292f;
+    --heading: #1f2328;
+    --accent: #9a6700;
+    --accent2: #0969da;
+    --code-bg: #eff1f3;
+    --code-text: #24292f;
+    --green: #1a7f37;
+    --red: #cf222e;
+    --muted: #57606a;
+    --hero1: #e8ecf1;
+    --hero2: #f5ead6;
+  }
+  * { box-sizing: border-box; }
+  html { font-size: 100%; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+  /* 10 niveles de tamaño: 0.85 → 1.30 rem */
+  html[data-size="1"] body { font-size: 0.88rem; }
+  html[data-size="2"] body { font-size: 0.92rem; }
+  html[data-size="3"] body { font-size: 0.97rem; }
+  html[data-size="4"] body { font-size: 1.02rem; }
+  html[data-size="5"] body { font-size: 1.07rem; }
+  html[data-size="6"] body { font-size: 1.12rem; }
+  html[data-size="7"] body { font-size: 1.17rem; }
+  html[data-size="8"] body { font-size: 1.22rem; }
+  html[data-size="9"] body { font-size: 1.27rem; }
+  html[data-size="10"] body { font-size: 1.32rem; }
+  /* Barra de controles */
+  .controls {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    justify-content: flex-end;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.6rem 0.9rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .controls label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-right: 0.2rem;
+  }
+  .controls select,
+  .controls input[type="range"] {
+    background: var(--code-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .controls select {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .controls input[type="range"] {
+    width: 160px;
+    padding: 0.25rem 0.4rem;
+    cursor: pointer;
+    accent-color: var(--accent);
+  }
+  .controls #sizeLabel {
+    display: inline-block;
+    min-width: 2.6em;
+    font-weight: 600;
+    color: var(--accent2);
+  }
+  .controls select:focus,
+  .controls input[type="range"]:focus { outline: 2px solid var(--accent2); }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+  header.hero {
+    background: linear-gradient(135deg, var(--hero1), var(--hero2));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2.5rem 2rem;
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
+  header.hero h1 { margin: 0 0 0.5rem; font-size: 2rem; color: var(--heading); }
+  header.hero p { margin: 0; color: var(--muted); max-width: 640px; margin-inline: auto; }
+  nav.toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2.5rem;
+  }
+  nav.toc h2 { margin-top: 0; color: var(--heading); font-size: 1.2rem; }
+  nav.toc ol { margin: 0; padding-left: 1.4rem; }
+  nav.toc a { color: var(--accent2); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+  section.module {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem 1.8rem;
+    margin-bottom: 2.5rem;
+  }
+  h2 { color: var(--heading); font-size: 1.6rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.4rem; margin-top: 0; }
+  h3 { color: var(--heading); font-size: 1.2rem; margin-top: 2rem; }
+  h4 { color: var(--heading); margin-top: 1.5rem; }
+  blockquote {
+    border-left: 4px solid var(--accent);
+    margin: 1.2rem 0;
+    padding: 0.6rem 1.2rem;
+    background: rgba(210, 153, 34, 0.06);
+    border-radius: 0 8px 8px 0;
+    color: #e6edf3;
+  }
+  code {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 0.15rem 0.4rem;
+    border-radius: 5px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.9em;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    overflow-x: auto;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  pre code { background: none; padding: 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.2rem 0;
+    font-size: 0.92rem;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 0.55rem 0.8rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: var(--code-bg); color: var(--heading); }
+  tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin: 0.35rem 0; }
+  .note {
+    background: rgba(88, 166, 255, 0.08);
+    border: 1px solid rgba(88, 166, 255, 0.3);
+    border-left: 4px solid var(--accent2);
+    border-radius: 0 8px 8px 0;
+    padding: 0.7rem 1rem;
+    margin: 1rem 0;
+  }
+  .warn {
+    background: rgba(248, 81, 73, 0.07);
+    border: 1px solid rgba(248, 81, 73, 0.3);
+    border-left: 4px solid var(--red);
+    border-radius: 0 8px 8px 0;
+    padding: 0.7rem 1rem;
+    margin: 1rem 0;
+  }
+  .tip {
+    background: rgba(63, 185, 80, 0.08);
+    border: 1px solid rgba(63, 185, 80, 0.3);
+    border-left: 4px solid var(--green);
+    border-radius: 0 8px 8px 0;
+    padding: 0.7rem 1rem;
+    margin: 1rem 0;
+  }
+  .kbd {
+    display: inline-block;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    padding: 0.1rem 0.5rem;
+    font-family: monospace;
+    font-size: 0.85em;
+  }
+  .checkbox { color: var(--green); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+  .divider { color: var(--muted); text-align: center; margin: 1rem 0; font-size: 0.85rem; }
+  footer { text-align: center; color: var(--muted); padding: 2rem 0 3rem; border-top: 1px solid var(--border); margin-top: 2rem; }
+  @media (max-width: 600px) {
+    body { font-size: 0.95rem; }
+    header.hero h1 { font-size: 1.5rem; }
+    section.module { padding: 1.5rem 1.2rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="controls" role="toolbar" aria-label="Opciones de visualización">
+  <label for="themeSelect">🌓 Tema:</label>
+  <select id="themeSelect" aria-label="Seleccionar tema">
+    <option value="auto">Automático</option>
+    <option value="dark">Oscuro</option>
+    <option value="light">Claro</option>
+  </select>
+  <label for="sizeSlider">🔠 Tamaño: <span id="sizeLabel">3/10</span></label>
+  <input type="range" id="sizeSlider" min="1" max="10" step="1" value="3" aria-label="Tamaño de fuente">
+</div>
+
+<header class="hero">
+  <h1>🦞 OpenClaw Avanzado<br>De Usuario a Power User</h1>
+  <p>Material didáctico completo del curso: la introducción y los 8 módulos en un solo documento.</p>
+</header>
+
+<nav class="toc">
+  <h2>Contenido</h2>
+  <ol>
+    <li><a href="#introduccion">Introducción: cómo usar este curso</a></li>
+    <li><a href="#modulo-1">Módulo 1 — Fundamentos avanzados del gateway y la arquitectura</a></li>
+    <li><a href="#modulo-2">Módulo 2 — Creación de funciones (tools) personalizadas</a></li>
+    <li><a href="#modulo-3">Módulo 3 — Agentes múltiples y rutas de sesión</a></li>
+    <li><a href="#modulo-4">Módulo 4 — Automatización avanzada con cron</a></li>
+    <li><a href="#modulo-5">Módulo 5 — Integración con MCP</a></li>
+    <li><a href="#modulo-6">Módulo 6 — RAG, embeddings y bases de datos vectoriales</a></li>
+    <li><a href="#modulo-7">Módulo 7 — Despliegue en contenedores Docker</a></li>
+    <li><a href="#modulo-8">Módulo 8 — Proyecto final integrador</a></li>
+  </ol>
+</nav>
+
+<!-- ===================== INTRODUCCIÓN ===================== -->
+<section class="module" id="introduccion">
+  <h2>Introducción: Cómo usar este curso</h2>
+  <blockquote>
+    <strong>Bienvenido/a al curso OpenClaw Avanzado — De Usuario a Power User.</strong>
+    Este es el material didáctico que desarrolla el temario. Léelo en orden: cada módulo se apoya en el anterior.
+  </blockquote>
+
+  <h3>Cómo está organizado</h3>
+  <p>El contenido está dividido en archivos (uno por módulo) dentro de esta carpeta:</p>
+  <pre><code>cursos/openclaw-avanzado/
+├── README.md ← este índice
+├── 00-introduccion.md ← guía de uso y requisitos
+├── 01-fundamentos-gateway.md ← Módulo 1
+├── 02-tools-personalizadas.md ← Módulo 2
+├── 03-agentes-multiples.md ← Módulo 3
+├── 04-cron-avanzado.md ← Módulo 4
+├── 05-mcp.md ← Módulo 5
+├── 06-rag-vectores.md ← Módulo 6
+├── 07-docker.md ← Módulo 7
+└── 08-proyecto-final.md ← Módulo 8 (evaluación)</code></pre>
+
+  <h3>Formato de cada módulo</h3>
+  <ol>
+    <li><strong>Objetivos</strong> — qué vas a saber hacer al terminar.</li>
+    <li><strong>Conceptos</strong> — la teoría explicada con <strong>analogías</strong> del mundo real.</li>
+    <li><strong>Ejemplos prácticos</strong> — bloques de código y comandos que puedes probar.</li>
+    <li><strong>Errores comunes</strong> — trampas típicas y cómo evitarlas.</li>
+    <li><strong>Ejercicios</strong> — tareas para afianzar (marcadas como casillas <code>[ ]</code>).</li>
+    <li><strong>Resumen</strong> — lo esencial en pocas líneas.</li>
+  </ol>
+
+  <h3>Requisitos antes de empezar</h3>
+  <ul>
+    <li><strong>Node.js</strong> 24.15+ (recomendado) o 22.22.3+.</li>
+    <li><strong>OpenClaw instalado y funcionando</strong> (<code>npm install -g openclaw@latest</code>).</li>
+    <li>Un <strong>gateway corriendo</strong>: <code>openclaw onboard --install-daemon</code> (o al menos <code>openclaw status</code>).</li>
+    <li>Acceso a un <strong>CLI</strong> y a un editor de texto.</li>
+    <li>Conocimientos básicos de <strong>Markdown</strong> y de la <strong>terminal</strong>.</li>
+  </ul>
+
+  <div class="tip">
+    💡 <strong>Tip de estudio:</strong> no leas pasivamente. Cada vez que veas un bloque de código, cópialo y pruébalo en tu máquina. Este curso se aprende <em>haciendo</em>.
+  </div>
+
+  <h3>El hilo conductor: una metáfora</h3>
+  <blockquote>
+    <strong>OpenClaw es como una central de mensajería (Gateway) conectada a una oficina de asistentes (agentes).</strong><br>
+    El <strong>Gateway</strong> es el edificio: recibe cartas (mensajes) de todos los canales y las reparte.<br>
+    Cada <strong>agente</strong> es un empleado con su propio escritorio (workspace) y su propio archivador (memoria).<br>
+    Las <strong>tools/skills</strong> son las herramientas de cada cajón.<br>
+    El <strong>cron</strong> es el encargado que pone alarmas y hace tareas a horas fijas.<br>
+    El <strong>MCP</strong> es el teléfono para pedir favores a servicios externos.<br>
+    La <strong>memoria vectorial (RAG)</strong> es el archivo inteligente que encuentra papeles por <em>significado</em>.<br>
+    <strong>Docker</strong> es el contenedor donde metes toda la oficina para mudarla a cualquier máquina.
+  </blockquote>
+
+  <h3>Glosario rápido</h3>
+  <table>
+    <thead><tr><th>Término</th><th>Qué es (en una línea)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Gateway</strong></td><td>El proceso central que conecta canales, agentes y herramientas.</td></tr>
+      <tr><td><strong>Workspace</strong></td><td>La carpeta "hogar" del agente, donde vive y crea archivos.</td></tr>
+      <tr><td><strong>Sesión</strong></td><td>Una conversación/contexto entre un usuario y un agente.</td></tr>
+      <tr><td><strong>Tool</strong></td><td>Una capacidad que el agente puede invocar.</td></tr>
+      <tr><td><strong>Skill</strong></td><td>Un paquete de instrucciones (con <code>SKILL.md</code>) que le enseña algo al agente.</td></tr>
+      <tr><td><strong>Cron</strong></td><td>El programador de tareas automáticas del gateway.</td></tr>
+      <tr><td><strong>MCP</strong></td><td>Model Context Protocol: estándar para conectar herramientas/servicios externos.</td></tr>
+      <tr><td><strong>Embedding</strong></td><td>Vector numérico que representa el <em>significado</em> de un texto.</td></tr>
+      <tr><td><strong>RAG</strong></td><td>Recuperación aumentada: dar contexto relevante al modelo desde una base.</td></tr>
+      <tr><td><strong>Docker</strong></td><td>Contenedores para empaquetar y desplegar aplicaciones reproducibles.</td></tr>
+    </tbody>
+  </table>
+</section>
+<div class="divider">• ● •</div>
+
+<!-- ===================== MÓDULO 1 ===================== -->
+<section class="module" id="modulo-1">
+  <h2>Módulo 1: Fundamentos avanzados del gateway y la arquitectura</h2>
+  <blockquote><strong>Duración:</strong> 1.5 h · <strong>Objetivo:</strong> explicar la arquitectura de OpenClaw y diagnosticar el gateway como operador.</blockquote>
+
+  <h3>Objetivos de aprendizaje</h3>
+  <ul>
+    <li>Explicar cómo encajan Gateway, agente, workspace, sesiones y canales.</li>
+    <li>Leer y modificar <code>~/.openclaw/openclaw.json</code> con seguridad.</li>
+    <li>Configurar cadenas de fallback de modelos.</li>
+    <li>Diagnosticar el gateway (<code>status</code>, <code>doctor</code>, <code>logs</code>).</li>
+    <li>Aplicar medidas básicas de seguridad.</li>
+  </ul>
+
+  <h3>1.1 Arquitectura: el edificio y sus empleados</h3>
+  <pre><code> ┌─────────────────────────────────────────────┐
+ │ GATEWAY │
+ │ (el edificio / proceso central) │
+ │                                              │
+ │ Canales → Telegram, Discord, Slack,          │
+ │ WhatsApp, WebChat, Signal…                  │
+ │        │                                    │
+ │        ▼                                    │
+ │ Agentes → [agente A] [agente B] [agente C]  │
+ │               │        │        │           │
+ │          workspace  workspace  workspace    │
+ │          (escritorio propio)                 │
+ └─────────────────────────────────────────────┘</code></pre>
+
+  <p><strong>Piezas clave:</strong></p>
+  <ul>
+    <li><strong>Gateway:</strong> el proceso que corre todo. Es la <em>única</em> fuente de verdad para sesiones, rutas y conexiones. Si no corre, nada funciona.</li>
+    <li><strong>Agente (agent runtime):</strong> el "empleado" que usa modelos de IA y herramientas.</li>
+    <li><strong>Workspace:</strong> la carpeta privada de cada agente (<code>~/.openclaw/workspace</code>). Su escritorio y su memoria. No es un sandbox duro.</li>
+    <li><strong>Sesión:</strong> una conversación con contexto.</li>
+    <li><strong>Canal:</strong> la vía de entrada/salida (Telegram, Discord, etc.).</li>
+  </ul>
+
+  <div class="note">💡 <strong>Analogía:</strong> el Gateway es el <em>interruptor general de luz</em>. Si lo apagas, toda la oficina se queda a oscuras.</div>
+
+  <h4>¿Dónde está cada cosa?</h4>
+  <table>
+    <thead><tr><th>Qué</th><th>Dónde vive</th></tr></thead>
+    <tbody>
+      <tr><td>Configuración</td><td><code>~/.openclaw/openclaw.json</code></td></tr>
+      <tr><td>Workspace (hogar del agente)</td><td><code>~/.openclaw/workspace</code></td></tr>
+      <tr><td>Credenciales (API keys, OAuth)</td><td><code>~/.openclaw/credentials/</code> y perfiles de auth</td></tr>
+      <tr><td>Sesiones (transcripciones)</td><td><code>~/.openclaw/agents/&lt;agentId&gt;/sessions/</code></td></tr>
+      <tr><td>Config por agente</td><td><code>~/.openclaw/agents/&lt;agentId&gt;/agent/</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="warn">⚠️ <strong>No guardes secretos en el workspace.</strong> API keys y tokens van en <code>~/.openclaw/</code> (o variables de entorno), nunca en archivos del workspace ni en git.</div>
+
+  <h3>1.2 Configuración profunda: <code>openclaw.json</code></h3>
+  <pre><code>{
+  // Agentes
+  agents: {
+    defaults: {
+      workspace: "~/.openclaw/workspace",
+      // sandbox: { enabled: true, ... }, // aislamiento opcional
+    },
+    list: [
+      { id: "soporte", workspace: "~/.openclaw/workspace-soporte" }
+    ],
+  },
+
+  // Canales
+  channels: {
+    telegram: { /* token, allowFrom, ... */ },
+    whatsapp: { allowFrom: ["+15555550123"] },
+  },
+
+  // Mensajes y grupos
+  messages: {
+    groupChat: { mentionPatterns: ["@openclaw"] },
+  },
+}</code></pre>
+
+  <p><strong>Puntos clave:</strong></p>
+  <ul>
+    <li><code>agents.defaults.workspace</code> fija el escritorio por defecto.</li>
+    <li><code>agents.list[]</code> define agentes extra, cada uno con su workspace.</li>
+    <li><code>channels.*.allowFrom</code> restringe quién puede escribir (allowlist).</li>
+    <li>El sandboxing (<code>agents.defaults.sandbox</code>) aísla las operaciones del agente.</li>
+  </ul>
+
+  <div class="note">💡 <strong>Analogía:</strong> <code>openclaw.json</code> es el <em>organigrama y reglamento de la oficina</em>: quién trabaja dónde y quién tiene llaves de qué puertas.</div>
+
+  <h3>1.3 Modelos y fallbacks: no te quedes a oscuras</h3>
+  <p>Un <strong>fallback</strong> es un plan B: si el modelo principal falla, el agente prueba el siguiente.</p>
+  <pre><code>{
+  agents: {
+    defaults: {
+      model: "anthropic/claude-sonnet-4-5",
+      fallbacks: [
+        "openai/gpt-4o",
+        "openrouter/meta-llama/llama-3.3-70b-instruct:free",
+      ],
+    },
+  },
+}</code></pre>
+  <p><strong>Override por sesión:</strong> cambia el modelo de una sesión desde el chat (slash command <code>/model</code>) sin tocar el default global.</p>
+
+  <div class="tip">💡 <strong>Tip:</strong> elige fallbacks de proveedores <em>diferentes</em> para que una caída de un proveedor no tire todo el stack.</div>
+
+  <h3>1.4 Diagnóstico: ser el técnico de la oficina</h3>
+  <pre><code>openclaw status            # estado general del gateway
+openclaw gateway status   # estado específico del gateway
+openclaw doctor           # diagnóstico profundo + arreglos
+openclaw logs --follow    # ver logs en vivo</code></pre>
+
+  <p><strong>La "escalera" de resolución de problemas:</strong></p>
+  <pre><code>openclaw status
+openclaw gateway status
+openclaw cron status      # si el problema es de tareas programadas
+openclaw logs --follow    # mira el error real
+openclaw doctor           # deja que diagnostique y proponga arreglos</code></pre>
+
+  <div class="note">💡 <strong>Analogía:</strong> estos comandos son el <em>fontanero, el electricista y el inspector</em> de tu edificio.</div>
+
+  <h3>1.5 Seguridad básica: las llaves de la oficina</h3>
+  <ul>
+    <li><strong>Tokens y API keys:</strong> van en <code>~/.openclaw/</code> o variables de entorno, nunca en git ni en el workspace.</li>
+    <li><strong>Allowlists:</strong> <code>channels.&lt;canal&gt;.allowFrom</code> limita quién puede escribirte.</li>
+    <li><strong>Permisos de herramientas:</strong> la policy de <code>tools.exec</code> controla qué comandos puede correr el agente.</li>
+    <li><strong>Sandboxing:</strong> <code>agents.defaults.sandbox</code> aísla las operaciones del agente.</li>
+  </ul>
+
+  <div class="warn">⚠️ <strong>Regla de oro:</strong> <em>menos privilegios, siempre.</em> Dale al agente solo lo que necesita para su tarea.</div>
+
+  <h3>Errores comunes</h3>
+  <ol>
+    <li><strong>"No responde nada":</strong> el Gateway está caído. <code>openclaw status</code> → <code>openclaw gateway restart</code>.</li>
+    <li><strong>Confundir workspace con config:</strong> editar <code>openclaw.json</code> cuando querías editar el workspace (o viceversa).</li>
+    <li><strong>Guardar secrets en el workspace:</strong> nunca.</li>
+    <li><strong>Sin fallbacks:</strong> un solo modelo = punto único de fallo.</li>
+  </ol>
+
+  <h3>Ejercicios</h3>
+  <ul>
+    <li class="checkbox">☐ Ejecuta <code>openclaw status</code> y <code>openclaw doctor</code>. Resuelve al menos un warning.</li>
+    <li class="checkbox">☐ Abre <code>~/.openclaw/openclaw.json</code> y localiza: <code>agents</code>, <code>channels</code>, <code>tools</code>.</li>
+    <li class="checkbox">☐ Configura una cadena de fallbacks de 2 modelos distintos.</li>
+    <li class="checkbox">☐ Identifica qué canales están conectados y qué allowlists tienen.</li>
+  </ul>
+
+  <h3>Resumen</h3>
+  <ul>
+    <li>El <strong>Gateway</strong> es el proceso central; sin él, nada corre.</li>
+    <li>El <strong>workspace</strong> es el hogar privado del agente.</li>
+    <li><strong><code>openclaw.json</code></strong> es el organigrama.</li>
+    <li><strong>Fallbacks</strong> de modelo = resiliencia.</li>
+    <li><strong>Diagnóstico:</strong> <code>status</code> → <code>logs</code> → <code>doctor</code>.</li>
+    <li><strong>Seguridad:</strong> menos privilegios, allowlists, sin secrets en el workspace.</li>
+  </ul>
+</section>
+<div class="divider">• ● •</div>
+
+<!-- ===================== MÓDULO 2 ===================== -->
+<section class="module" id="modulo-2">
+  <h2>Módulo 2: Creación de funciones (tools) personalizadas</h2>
+  <blockquote><strong>Duración:</strong> 2.5 h · <strong>Objetivo:</strong> diseñar, implementar y probar tools propias que el agente pueda invocar.</blockquote>
+
+  <h3>Objetivos de aprendizaje</h3>
+  <ul>
+    <li>Explicar qué es una tool y cómo el agente la descubre.</li>
+    <li>Crear <strong>skills</strong> del workspace (<code>SKILL.md</code>) con frontmatter y gating.</li>
+    <li>Construir tools combinando <code>exec</code>, <code>apply_patch</code>, <code>web_fetch</code> y scripts propios.</li>
+    <li>Seguir buenas prácticas de seguridad y calidad.</li>
+    <li>Probar con <code>openclaw agent --message</code> y publicar en ClawHub.</li>
+  </ul>
+
+  <h3>2.1 ¿Qué es una tool y cómo la invoca el agente?</h3>
+  <p>Una <strong>tool</strong> es una <em>capacidad</em> que el agente puede usar. El modelo no ejecuta código directamente: <strong>pide</strong> usar una tool, y OpenClaw la ejecuta y le devuelve el resultado.</p>
+
+  <div class="note">💡 <strong>Analogía:</strong> el agente es un empleado con un cajón de herramientas. No sabe soldar, pero <em>sabe cuándo</em> pedir el soldador.</div>
+
+  <p><strong>El ciclo de una tool:</strong></p>
+  <ol>
+    <li>El modelo ve la lista de tools disponibles.</li>
+    <li>Decide que necesita una y la invoca con argumentos.</li>
+    <li>OpenClaw ejecuta la tool.</li>
+    <li>El resultado vuelve al modelo, que lo usa para responder.</li>
+  </ol>
+
+  <h3>2.2 Skills del workspace: el <code>SKILL.md</code></h3>
+  <p>Una <strong>skill</strong> es la forma principal de añadir capacidades al agente: una carpeta con un <code>SKILL.md</code>.</p>
+  <pre><code>skills/
+└── mi-skill/
+    └── SKILL.md</code></pre>
+
+  <h4>Estructura de <code>SKILL.md</code></h4>
+  <pre><code>---
+name: mi-skill
+description: Crea informes semanales en Markdown con métricas.
+---
+
+# Mi skill
+
+Cuando el usuario pida un informe semanal:
+1. Lee los datos de `data/`.
+2. Genera un resumen con métricas.
+3. Guárdalo en `informes/YYYY-MM-DD.md`.</code></pre>
+
+  <table>
+    <thead><tr><th>Campo</th><th>Obligatorio</th><th>Qué hace</th></tr></thead>
+    <tbody>
+      <tr><td><code>name</code></td><td>✅</td><td>Slug en minúsculas, dígitos y guiones. Debe coincidir con la carpeta.</td></tr>
+      <tr><td><code>description</code></td><td>✅</td><td>Una línea (&lt;160 caracteres) para saber cuándo aplica.</td></tr>
+      <tr><td><code>user-invocable</code></td><td>No</td><td>Si el usuario puede lanzarlo con <code>/skill</code>. Por defecto <code>true</code>.</td></tr>
+      <tr><td><code>disable-model-invocation</code></td><td>No</td><td>Si <code>true</code>, el agente NO lo auto-invoca (solo <code>/skill</code>).</td></tr>
+      <tr><td><code>command-dispatch</code></td><td>No</td><td>Enruta el comando directamente a una tool, sin pasar por el modelo.</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Gating: que la skill solo cargue si hay requisitos</h4>
+  <pre><code>---
+name: gemini-search
+description: Busca en la web usando Gemini CLI.
+metadata:
+  openclaw:
+    requires:
+      bins: ["gemini"]        # necesita el binario 'gemini' en PATH
+      env: ["GEMINI_API_KEY"] # necesita esa variable de entorno
+---</code></pre>
+
+  <h4>Referencias con <code>{baseDir}</code></h4>
+  <pre><code>Ejecuta el script de ayuda en `{baseDir}/scripts/run.sh`.</code></pre>
+
+  <h3>2.3 Construir tools: <code>exec</code>, <code>apply_patch</code>, <code>web_fetch</code></h3>
+
+  <h4><code>exec</code> — ejecutar comandos</h4>
+  <pre><code># Skill: backup
+Cuando el usuario pida hacer un backup:
+1. Ejecuta: `tar -czf backups/temario-$(date +%F).tar.gz cursos/`
+2. Confirma el archivo creado con `ls -la backups/`</code></pre>
+
+  <h4><code>apply_patch</code> — editar varios archivos de forma estructurada</h4>
+  <pre><code>*** Begin Patch
+*** Add File: cursos/mi-curso/02-tools.md
++# Tools personalizadas
++Contenido del módulo 2...
+*** Update File: cursos/mi-curso/temario.md
+@@
+-| 2 | Herramientas | 1 semana |
++| 2 | Herramientas | 2 semanas |
+*** End Patch</code></pre>
+
+  <div class="tip">💡 <code>apply_patch</code> por defecto solo escribe <strong>dentro del workspace</strong> (<code>workspaceOnly: true</code>). Protección por defecto.</div>
+
+  <h4><code>web_fetch</code> — traer contenido de una URL</h4>
+  <pre><code># Skill: resumir-doc
+Cuando el usuario pida resumir una URL:
+1. Haz `web_fetch` de la URL.
+2. Resume los puntos clave en 5 bullets.</code></pre>
+
+  <h3>2.4 Buenas prácticas: seguridad y calidad</h3>
+  <ol>
+    <li><strong>Prompts concisos:</strong> la skill instruye <em>qué</em> hacer.</li>
+    <li><strong>Control de comandos:</strong> valida/sanitiza argumentos si usas <code>exec</code>.</li>
+    <li><strong>Menos privilegios:</strong> la skill solo usa las tools necesarias.</li>
+    <li><strong>Un archivo por módulo:</strong> más fácil revisar y reutilizar.</li>
+    <li><strong>Prueba antes de publicar:</strong> <code>openclaw agent --message "..."</code>.</li>
+  </ol>
+
+  <h3>2.5 Probando tus tools</h3>
+  <pre><code># Desde la terminal
+openclaw agent --message "crea el temario de un curso de Python"
+
+# O verifica que la skill cargó
+openclaw skills list</code></pre>
+
+  <div class="warn">⚠️ <strong>Gotcha:</strong> el agente solo "ve" las skills cargadas al inicio de su sesión. Cambios a mitad de sesión requieren <code>/new</code> o reinicio (<code>openclaw gateway restart</code>).</div>
+
+  <h3>2.6 Publicar en ClawHub</h3>
+  <pre><code>npm i -g clawhub
+clawhub login
+clawhub skill publish ./skills/mi-skill</code></pre>
+
+  <div class="tip">💡 <strong>Antes de construir desde cero, busca en <a href="https://clawhub.ai" style="color:var(--accent2)">clawhub.ai</a></strong> — quizá ya existe la skill que necesitas. Reutilizar &gt; reinventar.</div>
+
+  <h3>Errores comunes</h3>
+  <ol>
+    <li><strong><code>name</code> con mayúsculas o espacios:</strong> no se carga. Usa minúsculas + guiones.</li>
+    <li><strong><code>description</code> muy larga:</strong> una línea &lt;160 caracteres.</li>
+    <li><strong>Carpeta y <code>name</code> distintos:</strong> deben coincidir.</li>
+    <li><strong>Skill no visible tras crearla:</strong> falta <code>/new</code> o reiniciar.</li>
+    <li><strong>Inyección de comandos:</strong> nunca interpoles input no confiable en <code>exec</code>.</li>
+  </ol>
+
+  <h3>Ejercicios</h3>
+  <ul>
+    <li class="checkbox">☐ Crea una skill <code>resumir-url</code> que use <code>web_fetch</code>.</li>
+    <li class="checkbox">☐ Crea una skill <code>backup-temario</code> que use <code>exec</code>.</li>
+    <li class="checkbox">☐ Prueba ambas con <code>openclaw agent --message "..."</code>.</li>
+    <li class="checkbox">☐ (Opcional) Publica una en ClawHub.</li>
+  </ul>
+
+  <h3>Resumen</h3>
+  <ul>
+    <li>Las <strong>tools</strong> son el cajón de herramientas; el modelo decide cuándo usarlas según sus <strong>descripciones</strong>.</li>
+    <li>Una <strong>skill</strong> = carpeta + <code>SKILL.md</code>.</li>
+    <li>El <strong>gating</strong> hace que las skills solo carguen si hay requisitos.</li>
+    <li><code>exec</code>, <code>apply_patch</code> y <code>web_fetch</code> son los ladrillos.</li>
+    <li><strong>Prueba siempre</strong> y reinicia/<code>/new</code> tras crear skills.</li>
+    <li><strong>ClawHub</strong> para compartir y reutilizar.</li>
+  </ul>
+</section>
+<div class="divider">• ● •</div>
+
+<!-- ===================== MÓDULO 3 ===================== -->
+<section class="module" id="modulo-3">
+  <h2>Módulo 3: Agentes múltiples y rutas de sesión</h2>
+  <blockquote><strong>Duración:</strong> 2.0 h · <strong>Objetivo:</strong> configurar varios agentes con workspaces y sesiones aisladas, y enrutar tráfico entre ellos.</blockquote>
+
+  <h3>Objetivos de aprendizaje</h3>
+  <ul>
+    <li>Configurar múltiples agentes con workspaces aislados.</li>
+    <li>Entender la diferencia entre sesiones main, aisladas y persistentes.</li>
+    <li>Delegar tareas a subagentes (<code>sessions_spawn</code>, <code>sessions_send</code>).</li>
+    <li>Enrutar canales y remitentes a agentes concretos.</li>
+    <li>Coordinar agentes en flujos reales.</li>
+  </ul>
+
+  <h3>3.1 Multi-agente: cada empleado, su propio escritorio</h3>
+  <pre><code>{
+  agents: {
+    defaults: {
+      workspace: "~/.openclaw/workspace",
+    },
+    list: [
+      { id: "soporte", workspace: "~/.openclaw/workspace-soporte" },
+      { id: "editor",  workspace: "~/.openclaw/workspace-editor" },
+    ],
+  },
+}</code></pre>
+
+  <p><strong>¿Por qué separar agentes?</strong></p>
+  <ul>
+    <li>Diferentes dominios (soporte vs. edición).</li>
+    <li>Diferentes niveles de permisos o modelos.</li>
+    <li>Evitar que un flujo grande contamine el contexto de otro.</li>
+  </ul>
+
+  <div class="warn">⚠️ El workspace por defecto (<code>~/.openclaw/workspace</code>) es compartido si no defines <code>workspace</code> por agente.</div>
+
+  <h3>3.2 Sesiones: main, aisladas y persistentes</h3>
+  <table>
+    <thead><tr><th>Tipo</th><th>Qué es</th><th>Cuándo usarlo</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Main</strong></td><td>Sesión principal del agente (DMs)</td><td>Conversaciones normales contigo</td></tr>
+      <tr><td><strong>Aislada</strong></td><td>Contexto fresco, sin historial previo</td><td>Tareas puntuales que no contaminan</td></tr>
+      <tr><td><strong>Persistente</strong></td><td>Sesión nombrada que acumula historial</td><td>Flujos que construyen sobre resúmenes previos</td></tr>
+      <tr><td><strong>Por canal/grupo</strong></td><td>Cada grupo tiene su sesión</td><td>Separar contextos por grupo</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">💡 <strong>Analogía:</strong> la sesión main es tu escritorio; una aislada es un <em>cuarto desechable</em>; una persistente es un <em>proyecto en curso</em>.</div>
+
+  <h3>3.3 Subagentes y delegación</h3>
+  <pre><code>sessions_spawn(
+  task: "Investiga y resume la doc oficial sobre MCP en OpenClaw.
+         Devuelve un resumen de 10 líneas con los pasos de configuración.",
+  taskName: "investigador-mcp",
+  mode: "run" // one-shot: corre y termina
+)</code></pre>
+
+  <pre><code>sessions_send(
+  sessionKey: "&lt;sesión destino&gt;",
+  message: "¿Terminaste el resumen de MCP?"
+)</code></pre>
+
+  <p><strong>Cuándo delegar:</strong> lectura masiva de archivos, búsquedas web múltiples, tareas que generan mucho texto intermedio.</p>
+  <p><strong>Cuándo NO delegar:</strong> consultas rápidas o de una sola lectura.</p>
+
+  <h3>3.4 Enrutamiento por canal y por remitente</h3>
+  <pre><code>{
+  channels: {
+    telegram: {
+      allowFrom: ["+15555550123"],
+      agents: { "*": "soporte" },  // todo Telegram → 'soporte'
+    },
+    slack: {
+      agents: { "*": "editor" },    // todo Slack → 'editor'
+    },
+  },
+}</code></pre>
+
+  <pre><code>{
+  messages: {
+    groupChat: { mentionPatterns: ["@soporte", "@openclaw"] },
+  },
+}</code></pre>
+
+  <h3>3.5 Coordinación entre agentes: casos reales</h3>
+  <ul>
+    <li><strong>Pipeline de contenido:</strong> investigador → editor → revisor.</li>
+    <li><strong>Soporte escalado:</strong> soporte en Telegram, dev en Slack, aislamiento total.</li>
+    <li><strong>Reportero automático:</strong> cron recolecta métricas → editor formatea → se publica.</li>
+  </ul>
+
+  <div class="tip">💡 La clave de la coordinación: <strong>tareas claras y entregables explícitos</strong> en cada <code>sessions_spawn</code>/<code>sessions_send</code>.</div>
+
+  <h3>Errores comunes</h3>
+  <ol>
+    <li><strong>No definir <code>workspace</code> por agente:</strong> colisión de contexto.</li>
+    <li><strong>Delegar todo a subagentes:</strong> sobrecarga.</li>
+    <li><strong>No esperar resultados:</strong> olvidar <code>sessions_yield</code>.</li>
+    <li><strong>Enrutamiento ambiguo:</strong> sin allowlist cualquiera habla con tu agente.</li>
+    <li><strong>Contexto contaminado:</strong> usar sesión main para trabajos masivos.</li>
+  </ol>
+
+  <h3>Ejercicios</h3>
+  <ul>
+    <li class="checkbox">☐ Crea un segundo agente con su propio workspace.</li>
+    <li class="checkbox">☐ Lanza un subagente con <code>sessions_spawn</code> y recolecta el resultado.</li>
+    <li class="checkbox">☐ Enruta un canal concreto a tu segundo agente.</li>
+    <li class="checkbox">☐ Configura <code>mentionPatterns</code> para un grupo.</li>
+  </ul>
+
+  <h3>Resumen</h3>
+  <ul>
+    <li><strong>Multi-agente</strong> = varios empleados, cada uno con su escritorio y memoria aislada.</li>
+    <li><strong>Sesiones:</strong> main, aisladas (desechables), persistentes (proyecto).</li>
+    <li><strong>Subagentes</strong> (<code>sessions_spawn</code>) delegan; <code>sessions_send</code> comunica.</li>
+    <li><strong>Enrutamiento</strong> por canal/remitente decide qué agente responde dónde.</li>
+    <li>Coordina con <strong>objetivos y entregables explícitos</strong>.</li>
+  </ul>
+</section>
+<div class="divider">• ● •</div>
+
+<!-- ===================== MÓDULO 4 ===================== -->
+<section class="module" id="modulo-4">
+  <h2>Módulo 4: Automatización avanzada con cron</h2>
+  <blockquote><strong>Duración:</strong> 2.0 h · <strong>Objetivo:</strong> programar jobs recurrentes y puntuales con entrega a canales o webhooks.</blockquote>
+
+  <h3>Objetivos de aprendizaje</h3>
+  <ul>
+    <li>Crear jobs con los 4 tipos de schedule.</li>
+    <li>Elegir el payload correcto (system event, agent message, command).</li>
+    <li>Enrutar jobs a la sesión adecuada.</li>
+    <li>Entregar resultados por <code>announce</code>, <code>webhook</code> o <code>none</code>.</li>
+    <li>Gestionar jobs y entender reintentos/fallos.</li>
+  </ul>
+
+  <h3>4.1 El scheduler: el encargado de las alarmas</h3>
+  <div class="warn">⚠️ Cron corre <strong>dentro del proceso del Gateway</strong>. Si el Gateway está apagado, los jobs no disparan. Persisten en la base SQLite del estado.</div>
+
+  <h4>Tipos de schedule</h4>
+  <table>
+    <thead><tr><th>Tipo</th><th>Flag</th><th>Ejemplo</th><th>Uso</th></tr></thead>
+    <tbody>
+      <tr><td>Puntual</td><td><code>--at</code></td><td><code>--at "20m"</code></td><td>Recordatorio de una sola vez</td></tr>
+      <tr><td>Intervalo</td><td><code>--every</code></td><td><code>--every 1d</code></td><td>Cada X tiempo fijo</td></tr>
+      <tr><td>Expresión cron</td><td><code>--cron</code></td><td><code>--cron "0 9 * * 1"</code></td><td>Reglas complejas (5-6 campos)</td></tr>
+      <tr><td>Al salir</td><td><code>--on-exit</code></td><td>—</td><td>Cuando un comando termina</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warn">⚠️ <strong>Zonas horarias:</strong> sin <code>--tz</code>, cron usa la zona del <strong>host</strong>. Un <code>--at</code> sin zona se trata como <strong>UTC</strong>. Usa <code>--tz America/New_York</code>.</div>
+
+  <p><strong>Ejemplo de expresión (5 campos):</strong> <code>minuto hora día-mes mes día-semana</code></p>
+  <ul>
+    <li><code>0 9 * * 1</code> → todos los lunes a las 9:00.</li>
+    <li><code>*/15 * * * *</code> → cada 15 minutos.</li>
+  </ul>
+
+  <div class="note">💡 <strong>Gotcha clásico:</strong> día-de-mes + día-de-semana se interpreta con lógica <strong>OR</strong>. Para AND usa el modificador <code>+1</code> de croner (ej. <code>0 9 15 * +1</code>).</div>
+
+  <h3>4.2 Tipos de payload</h3>
+  <table>
+    <thead><tr><th>Payload</th><th>Flag</th><th>Qué hace</th><th>Cuándo</th></tr></thead>
+    <tbody>
+      <tr><td><strong>System event</strong></td><td><code>--system-event</code></td><td>Inyecta texto, <strong>sin llamar al modelo</strong></td><td>Recordatorios simples</td></tr>
+      <tr><td><strong>Agent message</strong></td><td><code>--message</code></td><td>Turno de agente <strong>con modelo</strong></td><td>Revisiones, análisis</td></tr>
+      <tr><td><strong>Command</strong></td><td><code>--command</code></td><td>Script en el host, <strong>sin modelo</strong></td><td>Tareas deterministas</td></tr>
+    </tbody>
+  </table>
+
+  <pre><code>openclaw cron add \
+  --name "Revisar temario" \
+  --at "2027-02-01T16:00:00Z" \
+  --session main \
+  --system-event "Recordatorio: revisa `cursos/mi-curso/temario.md`." \
+  --wake now \
+  --delete-after-run</code></pre>
+
+  <h3>4.3 Sesiones objetivo</h3>
+  <table>
+    <thead><tr><th>Valor</th><th>Corre en</th><th>Uso típico</th></tr></thead>
+    <tbody>
+      <tr><td><code>main</code></td><td>Carril de wake de la sesión principal</td><td>Recordatorios / system events</td></tr>
+      <tr><td><code>isolated</code></td><td>Sesión aislada <code>cron:&lt;jobId&gt;</code></td><td>Reportes, tareas que no contaminan</td></tr>
+      <tr><td><code>current</code></td><td>Sesión actual</td><td>Trabajo recurrente con contexto</td></tr>
+      <tr><td><code>session:&lt;id&gt;</code></td><td>Sesión persistente</td><td>Flujos que acumulan contexto</td></tr>
+    </tbody>
+  </table>
+
+  <h3>4.4 Entrega: announce, webhook y none</h3>
+  <table>
+    <thead><tr><th>Modo</th><th>Qué hace</th></tr></thead>
+    <tbody>
+      <tr><td><code>announce</code></td><td>Entrega el texto final al canal objetivo</td></tr>
+      <tr><td><code>webhook</code></td><td>POST del evento terminado a una URL</td></tr>
+      <tr><td><code>none</code></td><td>Sin entrega automática</td></tr>
+    </tbody>
+  </table>
+
+  <pre><code>openclaw cron create "0 9 * * 1" \
+  "Revisa `cursos/mi-curso/temario.md` y avísame si hay inconsistencias o mejoras." \
+  --name "Revisión semanal del temario" \
+  --tz "America/New_York" \
+  --session isolated \
+  --announce \
+  --channel slack \
+  --to "channel:C1234567890"</code></pre>
+
+  <pre><code>openclaw cron create "0 18 * * 1-5" \
+  "Resume los cambios del día en JSON." \
+  --name "Digest diario" \
+  --webhook "https://mi-app.com/openclaw/cron"</code></pre>
+
+  <div class="warn">⚠️ <strong>Idioma:</strong> los jobs de cron <strong>no infieren idioma</strong>. Si quieres español, díselo en el prompt.</div>
+
+  <h3>4.5 Gestión</h3>
+  <pre><code>openclaw cron list              # listar jobs
+openclaw cron get &lt;jobId&gt;       # ver un job como JSON
+openclaw cron show &lt;jobId&gt;      # ver job + ruta de entrega
+openclaw cron enable/disable &lt;jobId&gt;
+openclaw cron run &lt;jobId&gt;       # forzar ejecución
+openclaw cron run &lt;jobId&gt; --wait
+openclaw cron runs --id &lt;jobId&gt; # historial
+openclaw cron remove &lt;jobId&gt;    # borrar</code></pre>
+
+  <p><strong>Reintentos y fallos:</strong></p>
+  <ul>
+    <li><strong>One-shot:</strong> errores transitorios reintentan hasta <code>retry.maxAttempts</code> (default 3). Un error permanente desactiva el job.</li>
+    <li><strong>Recurrente:</strong> backoff (30s, 60s, 5m, 15m, 60m). Se resetea tras un éxito.</li>
+    <li><strong>Alertas:</strong> <code>--failure-alert-after &lt;n&gt;</code>.</li>
+  </ul>
+
+  <h3>Errores comunes</h3>
+  <ol>
+    <li><strong>Zona horaria equivocada.</strong></li>
+    <li><strong>Gateway apagado:</strong> los jobs no disparan.</li>
+    <li><strong><code>--session main</code> con <code>--message</code>:</strong> usa <code>isolated</code>/<code>current</code>.</li>
+    <li><strong>Sin idioma en el prompt.</strong></li>
+    <li><strong>Día-mes + día-semana con OR.</strong></li>
+    <li><strong>Job aislado sin contexto:</strong> no hereda tu conversación.</li>
+  </ol>
+
+  <h3>Ejercicios</h3>
+  <ul>
+    <li class="checkbox">☐ Crea un recordatorio puntual con <code>--at "5m"</code>, <code>--session main</code>, <code>--system-event</code>, <code>--delete-after-run</code>.</li>
+    <li class="checkbox">☐ Programa una revisión aislada recurrente que anuncie por tu canal.</li>
+    <li class="checkbox">☐ Envía un resumen a un webhook (<code>https://webhook.site</code>).</li>
+    <li class="checkbox">☐ Ejecuta <code>openclaw cron list</code> y <code>runs --id</code>.</li>
+  </ul>
+
+  <h3>Resumen</h3>
+  <ul>
+    <li>Cron es el <strong>programador interno del gateway</strong>; los jobs persisten en SQLite.</li>
+    <li><strong>Schedules:</strong> <code>at</code>, <code>every</code>, <code>cron</code>, <code>on-exit</code> — con <code>--tz</code>.</li>
+    <li><strong>Payloads:</strong> system event, agent message, command.</li>
+    <li><strong>Sesiones:</strong> main, isolated, current, session:&lt;id&gt;.</li>
+    <li><strong>Entrega:</strong> announce, webhook, none.</li>
+  </ul>
+</section>
+<div class="divider">• ● •</div>
+
+<!-- ===================== MÓDULO 5 ===================== -->
+<section class="module" id="modulo-5">
+  <h2>Módulo 5: Integración con Model Context Protocol (MCP)</h2>
+  <blockquote><strong>Duración:</strong> 2.0 h · <strong>Objetivo:</strong> conectar servidores MCP y exponer sus herramientas al agente.</blockquote>
+
+  <h3>Objetivos de aprendizaje</h3>
+  <ul>
+    <li>Explicar qué es MCP y cómo encaja en la arquitectura.</li>
+    <li>Configurar servidores MCP (local/stdio, HTTP, remotos).</li>
+    <li>Exponer tools de MCP al agente y a jobs de cron.</li>
+    <li>Aplicar seguridad y permisos a las tools MCP.</li>
+    <li>Conectar ejemplos reales: BD, APIs, navegador.</li>
+  </ul>
+
+  <h3>5.1 ¿Qué es MCP?</h3>
+  <p><strong>MCP (Model Context Protocol)</strong> es un estándar abierto para conectar <strong>herramientas y servicios externos</strong> a un agente de IA de forma uniforme.</p>
+
+  <div class="note">💡 <strong>Analogía:</strong> si las tools nativas son el cajón, MCP es el <em>contrato de enchufes</em> que permite conectar aparatos de cualquier fabricante.</div>
+
+  <pre><code>[Agente OpenClaw] ←→ [Cliente MCP] ←→ [Servidor MCP] ←→ [Servicio externo]
+                                                       (BD, API, navegador…)</code></pre>
+
+  <ul>
+    <li><strong>Cliente MCP:</strong> lo incorpora OpenClaw.</li>
+    <li><strong>Servidor MCP:</strong> expone herramientas/recursos de un servicio.</li>
+    <li><strong>Transportes:</strong> <code>stdio</code> (proceso local), <code>HTTP</code>/SSE (remoto).</li>
+  </ul>
+
+  <h3>5.2 Configurar servidores MCP</h3>
+  <h4>Servidor local (stdio)</h4>
+  <pre><code>{
+  mcp: {
+    servers: {
+      "mi-base-datos": {
+        command: "npx",
+        args: ["-y", "@modelcontextprotocol/server-sqlite"],
+        env: {
+          SQLITE_PATH: "/data/app.db",
+        },
+      },
+    },
+  },
+}</code></pre>
+
+  <h4>Servidor remoto (HTTP)</h4>
+  <pre><code>{
+  mcp: {
+    servers: {
+      "api-externa": {
+        url: "https://api.ejemplo.com/mcp",
+        // auth según el servidor
+      },
+    },
+  },
+}</code></pre>
+
+  <h3>5.3 Exponer tools de MCP al agente y a cron</h3>
+  <pre><code>openclaw cron create "0 7 * * *" \
+  "Consulta la BD y envía el resumen de actividad diaria." \
+  --name "Reporte diario BD" \
+  --session isolated \
+  --announce \
+  --channel telegram \
+  --to "-1001234567890"</code></pre>
+
+  <h3>5.4 Seguridad y permisos</h3>
+  <ul>
+    <li><strong>Allowlists de tools:</strong> restringe qué tools MCP puede usar.</li>
+    <li><strong>Permisos por agente:</strong> menos privilegios.</li>
+    <li><strong>Auth segura:</strong> tokens con el menor alcance.</li>
+    <li><strong>Revisa el servidor:</strong> solo fuentes confiables.</li>
+  </ul>
+
+  <pre><code>{
+  agents: {
+    defaults: {
+      toolsAllow: ["mcp.mi-base-datos.consulta", "mcp.mi-base-datos.inserción"],
+    },
+  },
+}</code></pre>
+
+  <div class="note">💡 <strong>Analogía de seguridad:</strong> darle al empleado una <em>tarjeta de acceso restringido</em>: puede entrar a la sala que necesita, no a todo el edificio.</div>
+
+  <h3>5.5 Ejemplos prácticos</h3>
+  <ul>
+    <li><strong>Base de datos (SQLite):</strong> consultar tablas, crear/leer registros.</li>
+    <li><strong>API externa:</strong> "¿Qué tiempo hará mañana en Madrid?"</li>
+    <li><strong>Navegador:</strong> automatizar páginas web.</li>
+  </ul>
+
+  <div class="tip">💡 <strong>Consejo:</strong> busca servidores MCP existentes en los registros de la comunidad antes de construir uno.</div>
+
+  <h3>Errores comunes</h3>
+  <ol>
+    <li><strong>Servidor MCP no arranca:</strong> revisa <code>command</code>, <code>args</code>, <code>env</code>.</li>
+    <li><strong>Remoto sin auth:</strong> los servidores HTTP suelen requerir token/OAuth.</li>
+    <li><strong>Exponer TODO el servidor:</strong> menos privilegios.</li>
+    <li><strong>MCP de fuente no confiable:</strong> vector de ataque.</li>
+    <li><strong>Confundir MCP con tools nativas.</strong></li>
+  </ol>
+
+  <h3>Ejercicios</h3>
+  <ul>
+    <li class="checkbox">☐ Conecta un servidor MCP local (ej. SQLite) y pide una consulta.</li>
+    <li class="checkbox">☐ Conecta un MCP remoto con autenticación.</li>
+    <li class="checkbox">☐ Restringe el alcance con <code>toolsAllow</code>.</li>
+    <li class="checkbox">☐ Programa un job de cron que use una tool MCP.</li>
+  </ul>
+
+  <h3>Resumen</h3>
+  <ul>
+    <li><strong>MCP</strong> estandariza el uso de servicios externos (el "enchufe universal").</li>
+    <li>Configura servidores <strong>locales (stdio)</strong> o <strong>remotos (HTTP)</strong>.</li>
+    <li>Las tools MCP quedan disponibles para el agente <strong>y para cron</strong>.</li>
+    <li><strong>Seguridad:</strong> allowlists, menos privilegios, auth mínima.</li>
+  </ul>
+</section>
+<div class="divider">• ● •</div>
+
+<!-- ===================== MÓDULO 6 ===================== -->
+<section class="module" id="modulo-6">
+  <h2>Módulo 6: RAG, embeddings y bases de datos vectoriales</h2>
+  <blockquote><strong>Duración:</strong> 2.5 h · <strong>Objetivo:</strong> montar un pipeline RAG: indexar documentos, generar embeddings y recuperar contexto.</blockquote>
+
+  <h3>Objetivos de aprendizaje</h3>
+  <ul>
+    <li>Explicar RAG, embeddings, similitud vectorial y chunking.</li>
+    <li>Usar la memoria y búsqueda semántica de OpenClaw.</li>
+    <li>Elegir y configurar una base vectorial.</li>
+    <li>Configurar proveedores de embeddings y <code>memorySearch</code>.</li>
+    <li>Integrar RAG en un agente.</li>
+  </ul>
+
+  <h3>6.1 Conceptos: el archivador inteligente</h3>
+  <div class="note">💡 <strong>Analogía:</strong> un empleado con RAG tiene un <em>archivador inteligente</em>: ante una pregunta, busca los papeles más relevantes y los lee antes de contestar.</div>
+
+  <p><strong>Piezas clave:</strong></p>
+  <ul>
+    <li><strong>Embedding:</strong> un <strong>vector de números</strong> que representa el <em>significado</em> de un texto.</li>
+    <li><strong>Similitud vectorial:</strong> cómo de "cerca" están dos vectores (coseno, euclidiana…).</li>
+    <li><strong>Chunking:</strong> dividir documentos grandes en fragmentos.</li>
+    <li><strong>Base vectorial:</strong> almacén optimizado para buscar por similitud.</li>
+  </ul>
+
+  <pre><code>1. INDEXADO:
+   Documentos → chunking → embeddings → base vectorial
+
+2. CONSULTA:
+   Pregunta → embedding de la pregunta
+   → buscar chunks más similares (top-k)
+   → inyectar chunks en el prompt → el modelo responde con contexto</code></pre>
+
+  <h3>6.2 Memoria y búsqueda semántica en OpenClaw</h3>
+  <ul>
+    <li><strong><code>memory_search</code></strong> — encuentra notas por <em>significado</em> (híbrido: vectores + keywords).</li>
+    <li><strong><code>memory_get</code></strong> — lee un archivo o rango de líneas.</li>
+  </ul>
+
+  <pre><code>openclaw memory status          # estado del índice
+openclaw memory search "MCP config"   # búsqueda semántica
+openclaw memory index --force   # reconstruir el índice</code></pre>
+
+  <h3>6.3 Bases de datos vectoriales</h3>
+  <table>
+    <thead><tr><th>Base</th><th>Cuándo usarla</th></tr></thead>
+    <tbody>
+      <tr><td><strong>SQLite (builtin)</strong></td><td>Default; sin dependencias extra. Perfecta para empezar.</td></tr>
+      <tr><td><strong>QMD</strong></td><td>Sidecar local con reranking. Búsquedas más precisas, todo local.</td></tr>
+      <tr><td><strong>LanceDB</strong></td><td>Plugin con embeddings OpenAI-compatibles y Ollama local.</td></tr>
+      <tr><td><strong>Qdrant</strong></td><td>Base dedicada, escalable, en contenedor. Ideal producción.</td></tr>
+      <tr><td><strong>pgvector</strong></td><td>Extensión de PostgreSQL. Si ya usas Postgres.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="tip">💡 <strong>Regla práctica:</strong> aprende con <strong>SQLite builtin</strong>; en producción pasa a <strong>Qdrant</strong> o <strong>pgvector</strong>.</div>
+
+  <h3>6.4 Proveedores de embeddings y <code>memorySearch</code></h3>
+  <pre><code>{
+  agents: {
+    defaults: {
+      memorySearch: {
+        provider: "ollama", // o: openai, gemini, voyage, mistral, bedrock, local GGUF, LM Studio…
+      },
+    },
+  },
+}</code></pre>
+
+  <div class="tip">💡 <strong>Tip local/privado:</strong> para no enviar documentos a la nube, usa <strong>Ollama</strong> o <strong>LM Studio</strong> con embeddings locales.</div>
+
+  <h3>6.5 Integrar RAG: caso práctico</h3>
+  <ol>
+    <li><strong>Configura el proveedor de embeddings.</strong></li>
+    <li><strong>Indexa tu corpus:</strong> <code>openclaw memory index --force</code>.</li>
+    <li><strong>Pregunta con contexto:</strong> el agente usa <code>memory_search</code>.</li>
+    <li><strong>(Producción) Base externa:</strong> conecta Qdrant/pgvector vía MCP (une Módulo 5 y 6).</li>
+  </ol>
+
+  <h3>Errores comunes</h3>
+  <ol>
+    <li><strong>Chunking mal dimensionado.</strong></li>
+    <li><strong>Embeddings sin contexto:</strong> corpus ruidoso = búsqueda ruidosa.</li>
+    <li><strong>No reindexar</strong> tras cambiar documentos.</li>
+    <li><strong>Proveedor no configurado:</strong> sin embeddings solo hay keyword.</li>
+    <li><strong>RAG sin citas:</strong> debe decirte de dónde sacó la info.</li>
+  </ol>
+
+  <h3>Ejercicios</h3>
+  <ul>
+    <li class="checkbox">☐ Configura un proveedor y reconstruye el índice.</li>
+    <li class="checkbox">☐ Indexa 3-5 documentos y haz búsquedas semánticas variando palabras.</li>
+    <li class="checkbox">☐ Levanta Qdrant en Docker y conecta un MCP de vectores.</li>
+    <li class="checkbox">☐ Pide una respuesta que combine RAG + conocimiento y evalúa la calidad.</li>
+  </ul>
+
+  <h3>Resumen</h3>
+  <ul>
+    <li><strong>RAG</strong> = dar contexto al modelo antes de responder.</li>
+    <li><strong>Embeddings</strong> = vectores que representan significado.</li>
+    <li><strong>Chunking</strong> = partir documentos en fragmentos.</li>
+    <li><strong><code>memory_search</code>/<code>memory_get</code></strong> con búsqueda semántica híbrida.</li>
+    <li>Bases: SQLite builtin → Qdrant/pgvector.</li>
+    <li><strong>Reindexa</strong> cuando cambies los documentos.</li>
+  </ul>
+</section>
+<div class="divider">• ● •</div>
+
+<!-- ===================== MÓDULO 7 ===================== -->
+<section class="module" id="modulo-7">
+  <h2>Módulo 7: Despliegue en contenedores Docker</h2>
+  <blockquote><strong>Duración:</strong> 2.0 h · <strong>Objetivo:</strong> contenerizar el gateway OpenClaw y sus servicios complementarios.</blockquote>
+
+  <h3>Objetivos de aprendizaje</h3>
+  <ul>
+    <li>Escribir un <code>Dockerfile</code> que levante el gateway.</li>
+    <li>Orquestar un stack con Docker Compose.</li>
+    <li>Persistir estado con volúmenes.</li>
+    <li>Gestionar redes, puertos y variables de entorno.</li>
+    <li>Aplicar buenas prácticas (sin secretos, healthchecks, logs).</li>
+  </ul>
+
+  <h3>7.1 ¿Por qué Docker? La mudanza perfecta</h3>
+  <div class="note">💡 <strong>Analogía:</strong> Docker es la <em>caja de mudanza con etiqueta</em>. Empaquetas el edificio, lo etiquetas y lo llevas a cualquier host.</div>
+
+  <p><strong>Beneficios:</strong></p>
+  <ul>
+    <li><strong>Reproducibilidad:</strong> misma imagen → mismo comportamiento.</li>
+    <li><strong>Aislamiento:</strong> no ensucia el host.</li>
+    <li><strong>Orquestación:</strong> Compose levanta gateway + Qdrant + MCP juntos.</li>
+    <li><strong>Persistencia controlada:</strong> volúmenes deciden qué sobrevive.</li>
+  </ul>
+
+  <h3>7.2 El Dockerfile del gateway</h3>
+  <pre><code># 1. Base: imagen oficial de Node
+FROM node:24-slim
+
+# 2. Instala OpenClaw globalmente
+RUN npm install -g openclaw@latest
+
+# 3. Directorio del workspace
+WORKDIR /workspace
+
+# 4. Copia tu config (sin secrets: usa variables de entorno)
+COPY openclaw.json /root/.openclaw/openclaw.json
+
+# 5. Expón el puerto del gateway (Control UI)
+EXPOSE 18789
+
+# 6. Comando de arranque
+CMD ["openclaw", "gateway", "start"]</code></pre>
+
+  <div class="warn">⚠️ <strong>Nunca copies API keys en la imagen.</strong> Se pasan por variables de entorno.</div>
+
+  <h3>7.3 Docker Compose: el stack completo</h3>
+  <pre><code>services:
+  gateway:
+    build: .
+    container_name: openclaw-gateway
+    ports:
+      - "18789:18789"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY} # del .env
+      - TZ=Europe/Madrid
+    volumes:
+      - ./workspace:/workspace
+      - openclaw_state:/root/.openclaw
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant
+    container_name: openclaw-qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+volumes:
+  openclaw_state:
+  qdrant_data:</code></pre>
+
+  <h3>7.4 Redes, puertos y variables de entorno</h3>
+  <pre><code># .env (NO versionar)
+OPENAI_API_KEY=sk-...</code></pre>
+
+  <div class="warn">⚠️ Añade <code>.env</code> a tu <code>.gitignore</code>.</div>
+
+  <ul>
+    <li><code>18789</code> → Gateway / Control UI.</li>
+    <li><code>6333</code> → Qdrant REST.</li>
+  </ul>
+
+  <h3>7.5 Buenas prácticas</h3>
+  <ol>
+    <li><strong>Sin secretos en la imagen.</strong></li>
+    <li><strong>Volúmenes</strong> para todo lo que deba persistir.</li>
+    <li><strong>Healthcheck.</strong></li>
+    <li><strong>Logs</strong> a stdout (Compose los captura).</li>
+    <li><strong><code>restart: unless-stopped</code>.</strong></li>
+    <li><strong>Versión fija</strong> de la imagen.</li>
+    <li><strong><code>.gitignore</code></strong> para <code>.env</code> y datos de volumen.</li>
+  </ol>
+
+  <h3>Errores comunes</h3>
+  <ol>
+    <li><strong>API key en la imagen.</strong></li>
+    <li><strong>Sin volumen en el workspace:</strong> pierdes trabajo al recrear.</li>
+    <li><strong>Confundir <code>down</code> con reinicio:</strong> los volúmenes nombrados persisten (salvo <code>-v</code>).</li>
+    <li><strong>Zona horaria por defecto (UTC).</strong></li>
+    <li><strong>Exponer puertos innecesarios.</strong></li>
+    <li><strong>Sin healthcheck.</strong></li>
+  </ol>
+
+  <h3>Ejercicios</h3>
+  <ul>
+    <li class="checkbox">☐ Escribe un <code>Dockerfile</code>.</li>
+    <li class="checkbox">☐ Crea un <code>docker-compose.yml</code> con gateway + Qdrant.</li>
+    <li class="checkbox">☐ Levanta el stack y verifica que responde en <code>18789</code>.</li>
+    <li class="checkbox">☐ Detén y recrea; comprueba que persiste.</li>
+    <li class="checkbox">☐ Añade un healthcheck y revisa logs.</li>
+  </ul>
+
+  <h3>Resumen</h3>
+  <ul>
+    <li><strong>Docker</strong> = empaquetado reproducible.</li>
+    <li><strong>Dockerfile:</strong> base Node, instala OpenClaw, expone 18789.</li>
+    <li><strong>Compose</strong> orquesta gateway + servicios.</li>
+    <li><strong>Persistencia:</strong> volúmenes.</li>
+    <li><strong>Seguridad:</strong> API keys por env vars, healthchecks.</li>
+  </ul>
+</section>
+<div class="divider">• ● •</div>
+
+<!-- ===================== MÓDULO 8 ===================== -->
+<section class="module" id="modulo-8">
+  <h2>Módulo 8: Proyecto final integrador</h2>
+  <blockquote><strong>Evaluación final ·</strong> El cierre del curso. Integra TODO lo aprendido en un sistema real.</blockquote>
+
+  <h3>Objetivo</h3>
+  <p>Construir un <strong>agente OpenClaw de producción</strong> que combine las 7 habilidades del curso en un solo stack funcional de extremo a extremo.</p>
+
+  <h3>El proyecto, en una frase</h3>
+  <blockquote>Un agente OpenClaw con <strong>tools propias</strong>, <strong>multi-agente</strong>, <strong>automatización por cron</strong>, <strong>MCP</strong>, <strong>RAG sobre vectores</strong> y desplegado en <strong>Docker</strong> — respondiendo a preguntas sobre tu propia base de conocimiento.</blockquote>
+
+  <h3>Requisitos funcionales</h3>
+  <table>
+    <thead><tr><th>#</th><th>Requisito</th><th>Módulo</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Al menos <strong>2 tools personalizadas</strong></td><td>2</td></tr>
+      <tr><td>2</td><td><strong>Múltiples agentes o subagentes</strong> con rutas aisladas</td><td>3</td></tr>
+      <tr><td>3</td><td>Al menos <strong>1 job de cron</strong> que reporte por canal/webhook</td><td>4</td></tr>
+      <tr><td>4</td><td><strong>1 servidor MCP</strong> y uso de sus tools</td><td>5</td></tr>
+      <tr><td>5</td><td>Responder con <strong>RAG</strong> sobre una base vectorial</td><td>6</td></tr>
+      <tr><td>6</td><td>Correr completo en <strong>Docker Compose</strong> con persistencia</td><td>7</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Guía de construcción (paso a paso)</h3>
+  <ol>
+    <li><strong>Define tu base de conocimiento</strong> (5-10 documentos).</li>
+    <li><strong>Configura el stack base:</strong> proveedor de embeddings, indexa, Dockerfile + compose.</li>
+    <li><strong>Añade tus tools</strong> (2 skills).</li>
+    <li><strong>Multi-agente</strong> (segundo agente o subagentes).</li>
+    <li><strong>Conecta MCP</strong> con permisos mínimos.</li>
+    <li><strong>Automatiza:</strong> job de cron aislado que anuncie por canal.</li>
+    <li><strong>Empaqueta</strong> con <code>docker compose up -d</code>.</li>
+  </ol>
+
+  <h3>Entregables</h3>
+  <ol>
+    <li><strong>Repositorio</strong> con <code>openclaw.json</code>, skills y scripts.</li>
+    <li><strong><code>docker-compose.yml</code></strong> del stack completo.</li>
+    <li><strong>Documentación breve</strong> (README).</li>
+  </ol>
+
+  <h3>Criterios de evaluación</h3>
+  <table>
+    <thead><tr><th>Criterio</th><th>Peso aprox.</th></tr></thead>
+    <tbody>
+      <tr><td>Configuración y aislamiento correcto de agentes</td><td>20%</td></tr>
+      <tr><td>Tools funcionales, seguras y documentadas</td><td>20%</td></tr>
+      <tr><td>Jobs de cron operativos con entrega real</td><td>15%</td></tr>
+      <tr><td>RAG respondiendo con contexto relevante</td><td>20%</td></tr>
+      <tr><td>Stack Docker reproducible en otra máquina</td><td>25%</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Rúbrica de autoevaluación</h3>
+  <ul>
+    <li class="checkbox">☐ ¿Puedo desplegar el stack en una máquina <em>limpia</em> siguiendo mi README?</li>
+    <li class="checkbox">☐ ¿El agente responde consultas usando mi base de conocimiento (RAG)?</li>
+    <li class="checkbox">☐ ¿Las tools hacen lo que prometen y no exponen comandos peligrosos?</li>
+    <li class="checkbox">☐ ¿El cron entrega resultados reales a un canal/webhook?</li>
+    <li class="checkbox">☐ ¿No hay API keys ni secretos en el repo?</li>
+    <li class="checkbox">☐ ¿El workspace y los datos persisten tras <code>down</code> + <code>up</code>?</li>
+  </ul>
+
+  <div class="tip">💡 Si respondes <strong>sí</strong> a todas, estás listo. Este es, en esencia, el perfil de un <strong>power user de OpenClaw</strong>. 🏆</div>
+
+  <h3>Evaluación final (composición de nota)</h3>
+  <ul>
+    <li><strong>40%</strong> Proyecto integrador.</li>
+    <li><strong>30%</strong> Ejercicios prácticos por módulo.</li>
+    <li><strong>30%</strong> Examen teórico-práctico.</li>
+  </ul>
+
+  <h3>Recursos de apoyo</h3>
+  <ul>
+    <li>Documentación oficial: <a href="https://docs.openclaw.ai" style="color:var(--accent2)">docs.openclaw.ai</a></li>
+    <li>Código fuente: <a href="https://github.com/openclaw/openclaw" style="color:var(--accent2)">github.com/openclaw/openclaw</a></li>
+    <li>ClawHub (skills): <a href="https://clawhub.ai" style="color:var(--accent2)">clawhub.ai</a></li>
+    <li>MCP: <a href="https://modelcontextprotocol.io" style="color:var(--accent2)">modelcontextprotocol.io</a></li>
+    <li>Docker: <a href="https://docs.docker.com" style="color:var(--accent2)">docs.docker.com</a></li>
+  </ul>
+
+  <h3>🎉 ¡Felicidades!</h3>
+  <div class="note">
+    Completaste el curso <strong>OpenClaw Avanzado — De Usuario a Power User</strong>. Ya eres capaz de construir agentes de producción: con tools propias, multi-agente, automatización, MCP, RAG con vectores y despliegue reproducible en Docker. <strong>La oficina es tuya. 🏢🔥</strong>
+  </div>
+</section>
+
+<footer>
+  🦞 Curso OpenClaw Avanzado — De Usuario a Power User · Material completo en HTML
+</footer>
+
+</div>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const themeSel = document.getElementById('themeSelect');
+  const sizeSlider = document.getElementById('sizeSlider');
+  const sizeLabel = document.getElementById('sizeLabel');
+  const THEME_KEY = 'openclaw-curso-theme';
+  const SIZE_KEY = 'openclaw-curso-size';
+
+  // --- Preferencia del sistema ---
+  function systemTheme() {
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+
+  // --- Aplicar tema ---
+  function applyTheme(value) {
+    if (value === 'auto') {
+      root.removeAttribute('data-theme');
+      root.dataset.theme = systemTheme();
+    } else {
+      root.dataset.theme = value;
+    }
+    themeSel.value = value;
+    try { localStorage.setItem(THEME_KEY, value); } catch (e) {}
+  }
+
+  // --- Aplicar tamaño (nivel 1-10) ---
+  function applySize(value) {
+    value = Math.max(1, Math.min(10, Number(value) || 3));
+    root.dataset.size = value;
+    sizeSlider.value = value;
+    sizeLabel.textContent = value + '/10';
+    try { localStorage.setItem(SIZE_KEY, String(value)); } catch (e) {}
+  }
+
+  // --- Cargar guardado o por defecto ---
+  let savedTheme = 'auto';
+  let savedSize = 3;
+  try {
+    savedTheme = localStorage.getItem(THEME_KEY) || 'auto';
+    const s = Number(localStorage.getItem(SIZE_KEY));
+    savedSize = (s >= 1 && s <= 10) ? s : 3;
+  } catch (e) {}
+  applyTheme(savedTheme);
+  applySize(savedSize);
+
+  // --- Eventos ---
+  themeSel.addEventListener('change', function () { applyTheme(this.value); });
+  sizeSlider.addEventListener('input', function () { applySize(this.value); });
+
+  // --- Si el usuario cambia el tema del SISTEMA mientras está en 'auto' ---
+  const mq = window.matchMedia('(prefers-color-scheme: light)');
+  mq.addEventListener('change', function () {
+    if (themeSel.value === 'auto') {
+      root.dataset.theme = systemTheme();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,276 @@
+{
+  "schemaVersion": "1.1",
+  "id": "spec-todo-api",
+  "projectId": "proj-todo",
+  "title": "Todo API",
+  "status": "planning",
+  "goals": [
+    {
+      "id": "goal-capture",
+      "title": "Capture todos quickly",
+      "description": "Let users create and list todos with minimal friction.",
+      "type": "user",
+      "successCriteria": ["A todo can be created and listed in under one second"]
+    },
+    {
+      "id": "goal-durable",
+      "title": "Keep todos durable",
+      "description": "Persist todos so they survive restarts.",
+      "type": "technical",
+      "successCriteria": ["No todo is lost across a service restart"]
+    },
+    {
+      "id": "goal-contract",
+      "title": "Expose a stable contract",
+      "description": "Offer a predictable REST surface clients can rely on.",
+      "type": "business",
+      "successCriteria": ["The public endpoints follow a documented contract"]
+    }
+  ],
+  "requirements": [
+    {
+      "id": "req-create",
+      "title": "Create a todo",
+      "description": "Clients can create a todo with a title.",
+      "type": "functional",
+      "acceptanceCriteria": [
+        {
+          "id": "ac-create",
+          "given": "a valid todo payload",
+          "when": "the client POSTs to /todos",
+          "then": "the todo is stored and returned with a generated id",
+          "order": 1
+        }
+      ]
+    },
+    {
+      "id": "req-list",
+      "title": "List todos",
+      "description": "Clients can retrieve all todos.",
+      "type": "functional",
+      "acceptanceCriteria": [
+        {
+          "id": "ac-list",
+          "given": "stored todos exist",
+          "when": "the client GETs /todos",
+          "then": "all todos are returned in creation order",
+          "order": 1
+        }
+      ]
+    },
+    {
+      "id": "req-validate",
+      "title": "Reject invalid input",
+      "description": "Malformed payloads are rejected clearly.",
+      "type": "business-rule",
+      "acceptanceCriteria": [
+        {
+          "id": "ac-validate",
+          "given": "a payload without a title",
+          "when": "the client POSTs to /todos",
+          "then": "the request is rejected with a 400",
+          "order": 1
+        }
+      ]
+    },
+    {
+      "id": "req-complete",
+      "title": "Complete a todo",
+      "description": "Clients can mark a todo as completed.",
+      "type": "functional",
+      "acceptanceCriteria": [
+        {
+          "id": "ac-complete",
+          "given": "an existing todo",
+          "when": "the client PATCHes /todos/:id",
+          "then": "the todo is marked completed and returned",
+          "order": 1
+        }
+      ]
+    },
+    {
+      "id": "req-delete",
+      "title": "Delete a todo",
+      "description": "Clients can delete a todo.",
+      "type": "functional",
+      "acceptanceCriteria": [
+        {
+          "id": "ac-delete",
+          "given": "an existing todo",
+          "when": "the client DELETEs /todos/:id",
+          "then": "the todo is removed and a 204 is returned",
+          "order": 1
+        }
+      ]
+    }
+  ],
+  "architecture": "A stateless HTTP service backed by a relational database, exposing a small REST API for todos.",
+  "scope": {
+    "inScope": ["Creating todos", "Listing todos", "Completing todos", "Deleting todos", "Input validation"],
+    "outOfScope": ["Authentication and multi-user accounts"]
+  },
+  "techStack": [],
+  "folderStructures": [
+    {
+      "id": "fs-service",
+      "scope": "service",
+      "content": "src/\n routes/todos.ts\n db/index.ts\n server.ts"
+    }
+  ],
+  "acceptanceCriteria": [],
+  "nonFunctionalRequirements": [
+    {
+      "id": "nfr-durable",
+      "title": "Durability",
+      "description": "Todos must survive a service restart.",
+      "type": "reliability"
+    }
+  ],
+  "guardrails": [],
+  "epics": [
+    {
+      "id": "epic-core",
+      "title": "Core Todo CRUD",
+      "description": "Implement the core CRUD operations for todos.",
+      "tickets": [
+        {
+          "id": "ticket-create-todo",
+          "epicId": "epic-core",
+          "title": "Implement POST /todos",
+          "description": "Create a todo. Validate the title is non-empty. Return 201 with the created resource.",
+          "ticketType": "implementation",
+          "complexity": "small",
+          "estimatedMinutes": 90,
+          "acceptanceCriteria": [
+            {
+              "id": "ac-create-201",
+              "given": "a payload with a title",
+              "when": "POST /todos is called",
+              "then": "a 201 is returned with the created todo",
+              "order": 1
+            },
+            {
+              "id": "ac-create-400",
+              "given": "a payload without a title",
+              "when": "POST /todos is called",
+              "then": "a 400 is returned with an error envelope",
+              "order": 2
+            }
+          ],
+          "implementationSteps": [
+            { "id": "step-1", "text": "Add the POST /todos route handler", "order": 1 },
+            { "id": "step-2", "text": "Validate the payload and persist the todo", "order": 2 }
+          ],
+          "filesToBeCreated": ["src/routes/todos.ts"],
+          "blueprintReferences": [
+            { "blueprintId": "bp-api-contract", "context": "Create path" }
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ticket-list-todos",
+          "epicId": "epic-core",
+          "title": "Implement GET /todos",
+          "description": "List all todos in creation order.",
+          "ticketType": "implementation",
+          "complexity": "small",
+          "estimatedMinutes": 60,
+          "acceptanceCriteria": [
+            {
+              "id": "ac-list-200",
+              "given": "stored todos exist",
+              "when": "GET /todos is called",
+              "then": "a 200 is returned with all todos in creation order",
+              "order": 1
+            }
+          ],
+          "implementationSteps": [
+            { "id": "step-1", "text": "Add the GET /todos route handler", "order": 1 },
+            { "id": "step-2", "text": "Query and return all todos in creation order", "order": 2 }
+          ],
+          "filesToBeCreated": ["src/routes/todos.ts"],
+          "blueprintReferences": [
+            { "blueprintId": "bp-api-contract", "context": "List path" }
+          ],
+          "dependencies": [
+            { "ticketId": "ticket-create-todo", "type": "requires" }
+          ]
+        },
+        {
+          "id": "ticket-complete-todo",
+          "epicId": "epic-core",
+          "title": "Implement PATCH /todos/:id",
+          "description": "Mark a todo as completed.",
+          "ticketType": "implementation",
+          "complexity": "small",
+          "estimatedMinutes": 60,
+          "acceptanceCriteria": [
+            {
+              "id": "ac-complete-200",
+              "given": "an existing todo",
+              "when": "PATCH /todos/:id is called",
+              "then": "a 200 is returned with the completed todo",
+              "order": 1
+            }
+          ],
+          "implementationSteps": [
+            { "id": "step-1", "text": "Add the PATCH /todos/:id route handler", "order": 1 },
+            { "id": "step-2", "text": "Mark the todo completed and persist", "order": 2 }
+          ],
+          "filesToBeCreated": ["src/routes/todos.ts"],
+          "blueprintReferences": [
+            { "blueprintId": "bp-api-contract", "context": "Complete path" }
+          ],
+          "dependencies": [
+            { "ticketId": "ticket-create-todo", "type": "requires" }
+          ]
+        },
+        {
+          "id": "ticket-delete-todo",
+          "epicId": "epic-core",
+          "title": "Implement DELETE /todos/:id",
+          "description": "Delete a todo.",
+          "ticketType": "implementation",
+          "complexity": "small",
+          "estimatedMinutes": 45,
+          "acceptanceCriteria": [
+            {
+              "id": "ac-delete-204",
+              "given": "an existing todo",
+              "when": "DELETE /todos/:id is called",
+              "then": "a 204 is returned and the todo is removed",
+              "order": 1
+            }
+          ],
+          "implementationSteps": [
+            { "id": "step-1", "text": "Add the DELETE /todos/:id route handler", "order": 1 },
+            { "id": "step-2", "text": "Remove the todo and return 204", "order": 2 }
+          ],
+          "filesToBeCreated": ["src/routes/todos.ts"],
+          "blueprintReferences": [
+            { "blueprintId": "bp-api-contract", "context": "Delete path" }
+          ],
+          "dependencies": [
+            { "ticketId": "ticket-create-todo", "type": "requires" }
+          ]
+        }
+      ]
+    }
+  ],
+  "blueprints": [
+    {
+      "id": "bp-db-schema",
+      "title": "Database schema",
+      "category": "erd",
+      "format": "mermaid",
+      "content": "erDiagram\n TODO {\n  uuid id PK\n  string title\n  bool completed\n }"
+    },
+    {
+      "id": "bp-api-contract",
+      "title": "API contract",
+      "category": "api",
+      "format": "markdown",
+      "content": "GET /todos -> 200 [Todo]\nPOST /todos -> 201 Todo\nPATCH /todos/:id -> 200 Todo\nDELETE /todos/:id -> 204"
+    }
+  ]
+}

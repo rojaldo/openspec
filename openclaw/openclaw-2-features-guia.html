@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es-ES" xml:lang="es-ES">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>OpenClaw 2.0 — Guía de las Features</title>
+  <style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+html {
+font-size: 11pt;
+line-height: 1.2;
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+div.abstract {
+margin: 2em 2em 2em 2em;
+text-align: left;
+font-size: 85%;
+}
+div.abstract-title {
+font-weight: bold;
+text-align: center;
+padding: 0;
+margin-bottom: 0.5em;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">OpenClaw 2.0 — Guía de las Features</h1>
+</header>
+<h1 id="openclaw-2.0-guía-de-las-features-v2026.8.1">OpenClaw 2.0 — Guía
+de las Features (v2026.8.1)</h1>
+<blockquote>
+<p><strong>“OpenClaw 2.0, Accidentally”</strong> — el mayor update en la
+historia de OpenClaw.</p>
+<p><strong>ÚLTIMA ACTUALIZACIÓN:</strong> Septiembre 4, 2026
+<strong>Fuente principal:</strong>
+https://openclaw.ai/blog/openclaw-2-accidentally + notas de release
+oficiales (v2026.8.1)</p>
+</blockquote>
+<p>OpenClaw 2.0 es, con diferencia, la actualización más grande en la
+historia del proyecto. Fue construida por <strong>933
+contribuidores</strong> (incluyendo <strong>569 que contribuían por
+primera vez</strong>) y está compuesta por <strong>más de 16,000 pull
+requests</strong>. Toca cada parte de OpenClaw: instalación, mensajería,
+memoria, skills, modelos, automatizaciones, el navegador, las apps
+nativas, los plugins, la seguridad y una larga cola de correcciones.</p>
+<p>Esta guía desglosa las features de forma estructurada y didáctica,
+para que entiendas qué cambió, por qué importa y cómo te beneficia.</p>
+<hr />
+<h2 id="tabla-de-contenidos">Tabla de contenidos</h2>
+<ul>
+<li><a href="#tldr--openclaw-20-en-una-tabla">TL;DR — OpenClaw 2.0 en
+una tabla</a></li>
+<li><a href="#la-historia-detrás-accidentally">La historia detrás:
+“Accidentally”</a></li>
+<li><a href="#1-instalación-y-onboarding-más-rápido">1. Instalación y
+onboarding más rápido</a></li>
+<li><a href="#2-la-nueva-web-ui-control-ui">2. La nueva Web UI (Control
+UI)</a></li>
+<li><a href="#3-mensajería-más-fiable">3. Mensajería más fiable</a></li>
+<li><a href="#4-memoria-y-continuidad-de-sesión">4. Memoria y
+continuidad de sesión</a></li>
+<li><a href="#5-skills-el-camino-completo">5. Skills: el camino
+completo</a></li>
+<li><a href="#6-apps-nativas">6. Apps nativas</a></li>
+<li><a href="#7-modelos-y-proveedores">7. Modelos y proveedores</a></li>
+<li><a href="#8-actualizaciones-y-mantenimiento">8. Actualizaciones y
+mantenimiento</a></li>
+<li><a href="#9-sesiones-compartidas-en-la-nube-multijugador">9.
+Sesiones compartidas en la nube (multijugador)</a></li>
+<li><a href="#10-seguridad-y-fiabilidad">10. Seguridad y
+fiabilidad</a></li>
+<li><a href="#cómo-un-claw-útil-puede-crecer">Cómo un Claw útil puede
+crecer</a></li>
+<li><a href="#qué-significa-todo-esto">Qué significa todo esto</a></li>
+<li><a href="#fuentes">Fuentes</a></li>
+</ul>
+<hr />
+<h2 id="tldr-openclaw-2.0-en-una-tabla">TL;DR — OpenClaw 2.0 en una
+tabla</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Aspecto</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Qué es</strong></td>
+<td>La mayor actualización de OpenClaw (v2026.8.1), “accidentalmente” la
+2.0</td>
+</tr>
+<tr class="even">
+<td><strong>Escala</strong></td>
+<td>933 contribuidores, 569 primerizos, 16,000+ PRs, ~50% de todos los
+PRs de la historia</td>
+</tr>
+<tr class="odd">
+<td><strong>Tiempo</strong></td>
+<td>Casi 7 semanas sin release (frente a 106 releases en 230 días
+antes)</td>
+</tr>
+<tr class="even">
+<td><strong>Foco principal</strong></td>
+<td>Instalación simplificada + Web UI reconstruida como experiencia de
+primera clase</td>
+</tr>
+<tr class="odd">
+<td><strong>Novedades clave</strong></td>
+<td>Onboarding reutilizando lo que ya tienes, memoria
+cross-conversación, sesiones multijugador en la nube, apps nativas
+ampliadas</td>
+</tr>
+<tr class="even">
+<td><strong>Mensajería</strong></td>
+<td>Telegram, Slack, Discord y apps nativas con mensajes más ricos y
+entrega fiable</td>
+</tr>
+<tr class="odd">
+<td><strong>Memoria</strong></td>
+<td>Built-in Memory (SQLite), recall entre conversaciones privadas,
+rewind/fork de chats</td>
+</tr>
+<tr class="even">
+<td><strong>Skills</strong></td>
+<td>Skill Workshop unificado, auto-aprendizaje, catálogo completo</td>
+</tr>
+<tr class="odd">
+<td><strong>Modelos</strong></td>
+<td>Catálogos en vivo, GPT-5.6, Claude Opus 5, Grok 4.6, Kimi K3,
+modelos locales</td>
+</tr>
+<tr class="even">
+<td><strong>Licencia</strong></td>
+<td>Open source — pertenece a quienes lo usan y construyen</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="la-historia-detrás-accidentally">La historia detrás:
+“Accidentally”</h2>
+<p>Antes de este update, OpenClaw había lanzado <strong>106 releases en
+230 días</strong>, casi siempre con uno o dos días de diferencia entre
+cada uno. Ir casi <strong>siete semanas sin publicar</strong> no era
+normal. Pero el ritmo de desarrollo fue en la dirección opuesta: el
+equipo creció, y el volumen y la velocidad del trabajo <strong>superaron
+tanto la base de OpenClaw como el proceso</strong> que usaban para
+publicarlo. Así que rehicieron ambos a la vez.</p>
+<p>Esa aceleración dejó un release con <strong>aproximadamente el 50% de
+todos los pull requests</strong> jamás fusionados en OpenClaw. Por eso
+se tomaron el tiempo extra: para que funcionara tanto para quien empieza
+desde cero como para quien <strong>actualiza un Claw existente</strong>,
+en lugar de publicar rápido y entregar un update que rompiera lo que ya
+tenían.</p>
+<blockquote>
+<p><strong>Lección clave:</strong> la 2.0 no fue un plan deliberado —
+fue el resultado natural de limpiar la instalación y reconstruir el
+navegador, y “hacerlo bien” arrastró la limpieza por el resto de
+OpenClaw hasta convertirse en 2.0.</p>
+</blockquote>
+<hr />
+<h2 id="instalación-y-onboarding-más-rápido">1. Instalación y onboarding
+más rápido</h2>
+<p><strong>El objetivo:</strong> llegar a un primer Claw útil más
+rápido.</p>
+<h3 id="para-instalaciones-nuevas">Para instalaciones nuevas</h3>
+<p>OpenClaw ahora <strong>empieza con lo que ya hay en el
+ordenador</strong> de la persona:</p>
+<ul>
+<li>Reutiliza <strong>suscripciones existentes</strong> de ChatGPT o
+Claude.</li>
+<li>Aprovecha <strong>API keys</strong> ya configuradas.</li>
+<li>Detecta <strong>modelos locales</strong> (Ollama, LM Studio,
+llama.cpp) ya instalados.</li>
+</ul>
+<p>Se cortó o simplificó mucha configuración, y el resto se <strong>sacó
+de la configuración inicial</strong>. Así la gente llega a una primera
+conversación más rápido y termina de configurar su Claw <strong>hablando
+con él</strong>.</p>
+<h3 id="verificación-real-del-modelo">Verificación real del modelo</h3>
+<p>El setup guiado <strong>verifica que el modelo elegido puede
+responder</strong> antes de guardarlo. No basta con seleccionarlo: la
+pantalla de modelos locales no muestra “Start chatting” hasta que esa
+elección exacta <strong>pasa la activación</strong>. Para cuentas de
+OpenAI, usa los modelos a los que la cuenta realmente tiene acceso.</p>
+<h3 id="instalación-más-robusta">Instalación más robusta</h3>
+<ul>
+<li>La app de Mac abierta desde Downloads puede <strong>moverse sola a
+Applications</strong> (para que las actualizaciones y el launch-at-login
+funcionen).</li>
+<li>En Linux/Unix, el instalador deja <code>openclaw</code> disponible
+en nuevas sesiones de terminal <strong>sin que edites archivos de shell
+a mano</strong>.</li>
+<li>Las instalaciones de red que expondrían OpenClaw <strong>sin
+autenticación se detienen</strong> antes de cambiar nada.</li>
+<li>Reinstalar <strong>protege una configuración existente</strong> si
+la preparación se cancela o falla.</li>
+</ul>
+<hr />
+<h2 id="la-nueva-web-ui-control-ui">2. La nueva Web UI (Control UI)</h2>
+<p><strong>El objetivo:</strong> el navegador es donde la mayoría conoce
+OpenClaw y tiene su primera conversación, así que se reconstruyó como
+<strong>experiencia de primera clase</strong>.</p>
+<h3 id="chat-first">Chat-first</h3>
+<p>La web ahora se siente familiar para quien usa ChatGPT, Claude,
+Gemini o Perplexity:</p>
+<ul>
+<li>Las <strong>conversaciones están en la barra lateral</strong> y la
+que estás trabajando <strong>en el centro</strong> (ya no se abre en una
+página Overview separada).</li>
+<li><strong>Settings e Inbox</strong> mantienen los detalles de
+configuración y alertas fuera del camino hasta que los necesitas.</li>
+<li>Las conversaciones y borradores de nuevas sesiones pueden abrirse en
+<strong>pestañas o ventanas reales del navegador</strong>.</li>
+</ul>
+<h3 id="sidebar-flexible">Sidebar flexible</h3>
+<ul>
+<li>Puede estar <strong>completamente plana</strong> o <strong>agrupar
+conversaciones</strong> por proyecto, persona o grupos
+personalizados.</li>
+<li><strong>Dobla los worktrees</strong> de vuelta a su proyecto
+original.</li>
+<li><strong>Recuerda su ancho</strong> — se siente mucho menos como
+herramienta de desarrollador cuando te mueves entre mucho trabajo.</li>
+</ul>
+<h3 id="todo-cerca-de-la-conversación">Todo cerca de la
+conversación</h3>
+<p>Archivos, aprobaciones, ajustes y trabajo en vivo quedan
+<strong>cerca de la conversación</strong>, para que puedas configurar un
+Claw, seguir lo que hace y seguir trabajando <strong>sin saltar entre
+herramientas separadas</strong>.</p>
+<hr />
+<h2 id="mensajería-más-fiable">3. Mensajería más fiable</h2>
+<p>La mensajería ahora <strong>mantiene más de una conversación
+intacta</strong> a través de los lugares donde la gente ya habla con su
+Claw.</p>
+<h3 id="canales-mejorados">Canales mejorados</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Canal</th>
+<th>Novedad</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Telegram</strong></td>
+<td>Mensajes y media más ricos</td>
+</tr>
+<tr class="even">
+<td><strong>Slack</strong></td>
+<td>Mantiene el progreso en vivo y la respuesta final juntos</td>
+</tr>
+<tr class="odd">
+<td><strong>Discord</strong></td>
+<td>Activities opt-in y salas de voz que entienden quién está
+presente</td>
+</tr>
+<tr class="even">
+<td><strong>Apps nativas</strong></td>
+<td>Media y envíos pendientes dentro de la conversación</td>
+</tr>
+</tbody>
+</table>
+<h3 id="entrega-y-recuperación">Entrega y recuperación</h3>
+<ul>
+<li>Los mensajes aceptados <strong>permanecen pendientes a través de
+reinicios gestionados</strong>.</li>
+<li>El estado del canal reporta si una conexión está <strong>usable,
+recuperándose o bloqueada</strong>.</li>
+<li>Si un envío expira sin resultado confirmado, OpenClaw
+<strong>preserva ese resultado como incierto</strong> y puede avisar en
+el siguiente contacto — en lugar de <strong>crear un duplicado
+probable</strong>.</li>
+<li>La recuperación empieza una vez que OpenClaw ha aceptado el mensaje,
+y cada servicio controla lo que puede confirmar más allá de ese
+punto.</li>
+</ul>
+<h3 id="preguntas-estructuradas">Preguntas estructuradas</h3>
+<p>Las preguntas de opción única elegibles pueden usar <strong>controles
+nativos</strong> en Telegram, Discord y Slack. Los turnos largos de
+Telegram y Discord pueden mostrar un <strong>titular de estado
+corto</strong> con actividad de herramientas compacta.</p>
+<hr />
+<h2 id="memoria-y-continuidad-de-sesión">4. Memoria y continuidad de
+sesión</h2>
+<p><strong>El cambio más profundo:</strong> la memoria ahora vive en
+<strong>SQLite</strong> (Built-in Memory) y puede <strong>recordar
+contexto entre conversaciones privadas</strong>.</p>
+<h3 id="built-in-memory-sqlite">Built-in Memory (SQLite)</h3>
+<ul>
+<li>Las sesiones y transcripciones ahora se almacenan en
+<strong>SQLite</strong> (antes en archivos).</li>
+<li><strong>Built-in Memory</strong> es dueño del camino core de
+búsqueda y recall.</li>
+<li>Hay una <strong>migración automática desde QMD</strong>
+(<code>openclaw doctor --fix</code>).</li>
+<li>LanceDB, Memory Wiki, servicios de embedding externos,
+<code>MEMORY.md</code> y <code>USER.md</code> mantienen roles
+distintos.</li>
+</ul>
+<blockquote>
+<p>⚠️ <strong>Aviso de downgrade:</strong> antes de volver a una versión
+anterior basada en archivos, usa el CLI actual para restaurar los
+artefactos de transcripción legacy archivados. Las sesiones creadas tras
+la migración no aparecerán en releases antiguos. Crea un <strong>backup
+verificado</strong> antes de actualizar.</p>
+</blockquote>
+<h3 id="recall-entre-conversaciones">Recall entre conversaciones</h3>
+<p>En instalaciones personales elegibles, tu Claw puede <strong>recordar
+contexto relevante de otras conversaciones privadas</strong> del mismo
+agente — incluyendo lo que importaba justo antes de un reset de sesión.
+El recall se limita a las conversaciones privadas de ese agente: grupos,
+canales, aliases compartidos, otros agentes, historial borrado y fuentes
+bloqueadas por política <strong>quedan fuera</strong>.</p>
+<h3 id="búsqueda-mejorada">Búsqueda mejorada</h3>
+<ul>
+<li>Entiende <strong>nombres de archivo y rutas Unicode</strong>
+completas y parciales.</li>
+<li>Amplía coincidencias estrictas finas.</li>
+<li>Mantiene resultados por <strong>palabras clave</strong> cuando un
+proveedor de embeddings opcional no puede arrancar.</li>
+<li>Cada búsqueda se mantiene en un <strong>índice publicado
+estable</strong> mientras se reconstruye la memoria.</li>
+</ul>
+<h3 id="rewind-fork-y-ramas">Rewind, fork y ramas</h3>
+<p>Los chats basados en SQLite (web, macOS, iOS, Android) pueden:</p>
+<ul>
+<li><strong>Rebobinar (rewind)</strong> a un mensaje de usuario.</li>
+<li><strong>Bifurcar (fork)</strong> la conversación.</li>
+<li><strong>Cambiar entre ramas preservadas</strong>.</li>
+</ul>
+<blockquote>
+<p>⚠️ Rebobinar cambia la rama del transcript, pero <strong>no
+deshace</strong> archivos, mensajes enviados ni otros efectos
+secundarios de herramientas.</p>
+</blockquote>
+<h3 id="sesiones-continuas">Sesiones continuas</h3>
+<p>Las sesiones sin política de reset configurada ahora
+<strong>permanecen abiertas durante días</strong>, y los marcadores
+durables de reset o compactación explican los cambios visibles en el
+historial.</p>
+<hr />
+<h2 id="skills-el-camino-completo">5. Skills: el camino completo</h2>
+<p>Las skills convierten <strong>la forma en que trabajas en
+instrucciones reutilizables</strong> que tu Claw puede seguir de nuevo.
+Esta release conecta <strong>todo el camino</strong>: crear, validar,
+encontrar, instalar, invocar, revisar y mejorar.</p>
+<h3 id="crear-y-validar">Crear y validar</h3>
+<ul>
+<li>Un <strong>camino guiado único</strong>: elegir cómo se invoca →
+añadir archivos de soporte → guardar → validar.</li>
+<li>El checker entiende la metadata de invocación y detecta problemas
+(como una descripción demasiado larga) <strong>antes de escribir
+nada</strong>.</li>
+<li>Las skills inválidas se reportan <strong>individualmente</strong>,
+así el resto del catálogo sigue disponible.</li>
+</ul>
+<h3 id="encontrar-instalar-y-usar">Encontrar, instalar y usar</h3>
+<ul>
+<li>Skills instaladas, descubrimiento de ClawHub, ajustes de skills y
+Skill Workshop comparten <strong>un solo hub de Plugins</strong>.</li>
+<li>Puedes elegir una skill en el chat o nombrar hasta <strong>ocho con
+<code>$skill-name</code></strong>.</li>
+<li>El picker de chat añade referencias a tu borrador <strong>sin
+enviarlo</strong>.</li>
+<li><strong>Code Mode</strong> puede listar y leer skills elegibles
+dentro de su sandbox y allowlist.</li>
+</ul>
+<h3 id="skill-workshop">Skill Workshop</h3>
+<p>Reúne <strong>propuestas, comprobaciones, decisiones e historial
+aplicado</strong> en un solo flujo de trabajo:</p>
+<ul>
+<li>Inspecciona las instrucciones propuestas y archivos de soporte.</li>
+<li>Ve resultados de <strong>scanners, benchmarks y graders</strong> de
+plugins.</li>
+<li>Revisa la propuesta y luego <strong>aplica, rechaza o pone en
+cuarentena</strong>.</li>
+<li>Los hallazgos críticos de <strong>prompt-injection bloquean la
+aplicación</strong>.</li>
+<li>Cada decisión queda ligada a la <strong>revisión exacta</strong> que
+revisaste.</li>
+</ul>
+<h3 id="auto-aprendizaje">Auto-aprendizaje</h3>
+<p>OpenClaw puede convertir <strong>trabajo sustancial y correcciones
+durables</strong> en skills reutilizables:</p>
+<ul>
+<li>Las instalaciones nuevas empiezan en modo <code>auto</code>; las
+actualizaciones conservan su elección.</li>
+<li><code>off</code> desactiva la reparación automática;
+<code>propose</code> encola cambios para revisión; <code>auto</code>
+puede crear o actualizar skills propiedad de Workshop.</li>
+<li>Las skills que <strong>tú escribiste</strong> y las compartidas de
+otros <strong>siguen siendo tuyas</strong> — el auto-aprendizaje puede
+sugerir mejoras pero <strong>no puede reescribirlas ni
+eliminarlas</strong> por sí solo.</li>
+</ul>
+<hr />
+<h2 id="apps-nativas">6. Apps nativas</h2>
+<p>Esta release hace que las apps nativas sean útiles para <strong>más
+del trabajo alrededor de una conversación</strong>.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Plataforma</th>
+<th>Novedades</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>iPhone / iPad</strong></td>
+<td>Una sola superficie de Chat con typing, dictado, notas de voz,
+adjuntos, Talk en tiempo real y controles de
+sesión/modelo/razonamiento/actividad de herramientas. Sidebar para
+cambiar de agente, buscar y fijar destinos. Compartir con preview de
+adjuntos y progreso.</td>
+</tr>
+<tr class="even">
+<td><strong>Apple Watch</strong></td>
+<td>Conserva mensajes, aprobaciones, respuestas y comandos a través de
+relaunches, cambios de Gateway, navegación y reintentos. Reconciliación
+entre teléfono y Watch para no perder ni repetir acciones.</td>
+</tr>
+<tr class="odd">
+<td><strong>Android</strong></td>
+<td>Voz, adjuntos, elección de modelos y controles de conversación en
+Chat.</td>
+</tr>
+<tr class="even">
+<td><strong>macOS</strong></td>
+<td><strong>Quick Chat</strong> desde la barra de menú o un atajo
+global.</td>
+</tr>
+<tr class="odd">
+<td><strong>Wear OS</strong></td>
+<td>Transcripciones, respuestas, Talk y controles de sesión en un reloj
+emparejado.</td>
+</tr>
+<tr class="even">
+<td><strong>Linux desktop</strong></td>
+<td>Bandeja (tray), Control UI embebida y Quick Chat.</td>
+</tr>
+</tbody>
+</table>
+<p>Además, <strong>tarjetas de progreso y widgets creados por el
+asistente</strong> traen más del trabajo activo del Claw a las
+conversaciones nativas, con traducciones, acentos de perfil, waveforms y
+diffs de archivos.</p>
+<hr />
+<h2 id="modelos-y-proveedores">7. Modelos y proveedores</h2>
+<h3 id="catálogos-en-vivo">Catálogos en vivo</h3>
+<ul>
+<li>Chat y la página de Models ahora <strong>abren desde el catálogo que
+OpenClaw ya tiene</strong> — elegir un modelo ya no espera un escaneo
+completo de proveedores.</li>
+<li>El <strong>descubrimiento en vivo</strong> corre solo cuando abres
+una pantalla de modelos o pides un refresh.</li>
+<li>Si la búsqueda falla, se mantienen las <strong>entradas integradas y
+la última lista útil</strong>.</li>
+</ul>
+<h3 id="modelos-nuevos-soportados">Modelos nuevos soportados</h3>
+<ul>
+<li><strong>GPT-5.6</strong> (Sol y Luna) como default activo para
+setups frescos de OpenAI.</li>
+<li><strong>Claude Opus 5</strong> (end-to-end en rutas Anthropic).</li>
+<li><strong>Grok 4.6</strong> (catálogo de primera clase + soporte de
+razonamiento).</li>
+<li><strong>Kimi K3</strong> (256K) en Moonshot y Kimi Code.</li>
+<li><strong>GLM 5.3</strong> para Z.AI Coding Plan.</li>
+<li><strong>Meta Muse Spark 1.1/1.2</strong>, <strong>Cohere
+Command</strong>, <strong>Baseten</strong>, <strong>Step 3.7
+Flash</strong>.</li>
+<li><strong>Modelos locales</strong>: llama.cpp gestionado (Gemma 4 como
+default RAM-gated), Ollama, LM Studio.</li>
+</ul>
+<h3 id="control-de-modelo-por-sesión">Control de modelo por sesión</h3>
+<ul>
+<li><code>/model</code> puede cambiar <strong>solo la conversación
+actual</strong> o actualizar deliberadamente <strong>un agente o el
+default compartido</strong>.</li>
+<li>Los cambios persistentes requieren la autoridad correcta.</li>
+<li>Aliases y fallbacks mantienen el <strong>proveedor y la
+cuenta</strong> adjuntos al modelo seleccionado.</li>
+<li>OpenClaw reporta <strong>ventanas de plan, uso de tokens, presión de
+contexto y costo estimado</strong> con más claridad.</li>
+</ul>
+<hr />
+<h2 id="actualizaciones-y-mantenimiento">8. Actualizaciones y
+mantenimiento</h2>
+<p>La release incluye un gran pase de fiabilidad y mantenimiento:</p>
+<ul>
+<li><strong>Actualizaciones más seguras:</strong> el camino de update
+protege la configuración existente y da tiempo a OpenClaw para arrancar
+antes de reportar si es alcanzable.</li>
+<li><strong>Recuperación de Gateway:</strong> arranques más rápidos,
+tokens recuperables de forma segura, y arranque responsive durante la
+preparación del runtime de modelos.</li>
+<li><strong>Fiabilidad de canales:</strong> recuperación de conexiones
+tras sleep del host, entrega de respuestas en cola a través de
+reinicios, y estados de fallo accionables.</li>
+<li><strong>Miles de fixes:</strong> la larga cola de correcciones toca
+instalación, mensajería, memoria, skills, modelos, automatizaciones,
+browser, apps nativas, plugins y seguridad.</li>
+</ul>
+<hr />
+<h2 id="sesiones-compartidas-en-la-nube-multijugador">9. Sesiones
+compartidas en la nube (multijugador)</h2>
+<p>Una de las novedades más transformadoras: <strong>Shared cloud
+sessions</strong>.</p>
+<p>Antes, OpenClaw no tenía forma de <strong>traer a otro miembro del
+equipo al trabajo</strong> sin perder lo que el Claw ya sabía. Las
+sesiones compartidas en la nube cambiaron eso y convirtieron OpenClaw en
+una <strong>experiencia multijugador</strong>:</p>
+<ul>
+<li>Trae a la persona correcta al <strong>trabajo en vivo</strong>.</li>
+<li><strong>Entrega el trabajo</strong> con el contexto intacto.</li>
+<li>El propio equipo de OpenClaw lo usa para <strong>construir
+OpenClaw</strong>.</li>
+</ul>
+<blockquote>
+<p><strong>Ejemplo real:</strong> un dashboard construido por un usuario
+dentro de un workspace multijugador compartido de OpenClaw.</p>
+</blockquote>
+<hr />
+<h2 id="seguridad-y-fiabilidad">10. Seguridad y fiabilidad</h2>
+<ul>
+<li><strong>Instalaciones de red sin autenticación se bloquean</strong>
+antes de cambiar nada.</li>
+<li><strong>Prompt-injection</strong> detectada en skills bloquea la
+aplicación de propuestas.</li>
+<li><strong>Aislamiento de memoria:</strong> el recall se limita a las
+conversaciones privadas del mismo agente; los sub-agentes sandboxed no
+pueden leer Memory Wiki cross-agent.</li>
+<li><strong>Credenciales aisladas</strong> por agente y por proveedor
+(LanceDB, Ollama, fallbacks).</li>
+<li><strong>Fail-closed:</strong> los proveedores de embeddings
+requeridos fallan cerrado; las búsquedas se mantienen dentro de raíces y
+límites de agente configurados.</li>
+<li><strong>Entrega de mensajes:</strong> se preserva el resultado
+incierto en lugar de reenviar a ciegas (evita duplicados).</li>
+</ul>
+<hr />
+<h2 id="cómo-un-claw-útil-puede-crecer">Cómo un Claw útil puede
+crecer</h2>
+<p>El blog ilustra la progresión con un ejemplo concreto:</p>
+<h3 id="paso-1-un-flujo-simple">Paso 1: Un flujo simple</h3>
+<p>Tu Claw no necesita ser complicado. Un workflow simple podría:</p>
+<blockquote>
+<p>Vigilar tu inbox por los <strong>emails del colegio de tus
+hijos</strong> y enviarte un <strong>mensaje de Telegram</strong> cuando
+llegue algo importante — como deberes pendientes o una actividad próxima
+para la que prepararte.</p>
+</blockquote>
+<p>Usa un inbox, busca unas pocas cosas importantes y envía el resultado
+a un solo lugar. <strong>Ya es suficiente para ser útil.</strong></p>
+<h3 id="paso-2-alcanzar-más-lugares-sin-complicarse">Paso 2: Alcanzar
+más lugares sin complicarse</h3>
+<p>Desde ahí, una tarea puede <strong>alcanzar más lugares sin volverse
+más difícil de usar</strong>:</p>
+<blockquote>
+<p>Cuando tu hermano envía un iMessage preguntando qué iPad le compraste
+a tu papá, puedes <strong>saltarte buscar el recibo en tu email</strong>
+y simplemente decirle a tu Claw que tu hermano acaba de escribir,
+pedirle que encuentre la respuesta y se la envíe. <strong>El Claw
+simplemente lo hace.</strong></p>
+</blockquote>
+<h3 id="paso-3-multijugador">Paso 3: Multijugador</h3>
+<p>La misma progresión apareció dentro del equipo de OpenClaw: usaban
+sus Claws para más trabajo y querían <strong>compartir tareas, colaborar
+y a veces entregarlas por completo</strong>. Las sesiones compartidas en
+la nube lo hicieron posible.</p>
+<hr />
+<h2 id="qué-significa-todo-esto">Qué significa todo esto</h2>
+<p>Tu OpenClaw <strong>empieza con un workflow útil y crece tan lejos
+como quieras</strong>, con la posibilidad de:</p>
+<ul>
+<li>Alcanzar <strong>más de tu vida y trabajo</strong>.</li>
+<li>Volverse <strong>multijugador</strong> con tu familia o equipo,
+cuando y como quieras.</li>
+</ul>
+<p>Esto ha cambiado la relación de la gente con el software: de algo
+<strong>diseñado en otro lugar que tienes que aceptar</strong>, a algo
+que <strong>puedes decirle qué hacer, moldear alrededor de tu vida y
+trabajo, y realmente poseer</strong>.</p>
+<blockquote>
+<p><strong>No están vendiendo nada</strong> ni pidiendo que confíes en
+una sola empresa, modelo o proveedor de IA con ese futuro. OpenClaw es
+<strong>open source</strong> y pertenece a quienes lo usan y ayudan a
+construirlo.</p>
+</blockquote>
+<hr />
+<h2 id="fuentes">Fuentes</h2>
+<ul>
+<li>Blog oficial: https://openclaw.ai/blog/openclaw-2-accidentally</li>
+<li>Notas de release (v2026.8.1):
+https://docs.openclaw.ai/releases/2026.8.1</li>
+<li>Getting started: https://docs.openclaw.ai/start/getting-started</li>
+<li>Repo: https://github.com/openclaw/openclaw</li>
+<li>Discord: https://discord.com/invite/clawd</li>
+</ul>
+</body>
+</html>

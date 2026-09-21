@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>ECC — Everything Claude Code</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {  background-color: #f8f8f8; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ef2929; } /* Alert */
+    code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #204a87; } /* Attribute */
+    code span.bn { color: #0000cf; } /* BaseN */
+    code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4e9a06; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #8f5902; font-style: italic; } /* Comment */
+    code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+    code span.dt { color: #204a87; } /* DataType */
+    code span.dv { color: #0000cf; } /* DecVal */
+    code span.er { color: #a40000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #0000cf; } /* Float */
+    code span.fu { color: #204a87; font-weight: bold; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+    code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+    code span.ot { color: #8f5902; } /* Other */
+    code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+    code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+    code span.ss { color: #4e9a06; } /* SpecialString */
+    code span.st { color: #4e9a06; } /* String */
+    code span.va { color: #000000; } /* Variable */
+    code span.vs { color: #4e9a06; } /* VerbatimString */
+    code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">ECC — Everything Claude Code</h1>
+</header>
+<h1 id="ecc--everything-claude-code">ECC — Everything Claude Code</h1>
+<h3 id="guía-completa-didáctica-y-con-ejemplos-paso-a-paso">Guía
+completa, didáctica y con ejemplos paso a paso</h3>
+<blockquote>
+<p><strong>Versión documentada:</strong> ECC 2.2.1 <strong>Repositorio
+oficial:</strong> <a
+href="https://github.com/affaan-m/ECC">https://github.com/affaan-m/ECC</a>
+<strong>Instalado en:</strong> OpenClaw (target <code>openclaw</code>,
+perfil <code>minimal</code>)</p>
+</blockquote>
+<hr />
+<h2 id="-índice">📖 Índice</h2>
+<ol type="1">
+<li><a href="#1-qué-es-ecc">¿Qué es ECC?</a></li>
+<li><a href="#2-conceptos-clave-explicados-simple">Conceptos clave
+(explicados simple)</a></li>
+<li><a href="#3-qué-incluye-ecc-los-números">Qué incluye ECC (los
+números)</a></li>
+<li><a href="#4-instalación-paso-a-paso">Instalación paso a
+paso</a></li>
+<li><a href="#5-perfiles-de-instalación">Perfiles de
+instalación</a></li>
+<li><a href="#6-cómo-usar-ecc-comandos">Cómo usar ECC: comandos</a></li>
+<li><a href="#7-cómo-usar-ecc-skills">Cómo usar ECC: skills</a></li>
+<li><a href="#8-cómo-usar-ecc-agentes">Cómo usar ECC: agentes</a></li>
+<li><a href="#9-los-hooks-el-cerebro-automático">Los hooks: el "cerebro"
+automático</a></li>
+<li><a href="#10-soporte-por-harness-cuál-elegir">Soporte por harness
+(cuál elegir)</a></li>
+<li><a href="#11-ejemplos-prácticos-paso-a-paso">Ejemplos prácticos paso
+a paso</a></li>
+<li><a href="#12-solución-de-problemas">Solución de problemas</a></li>
+<li><a href="#13-seguridad">Seguridad</a></li>
+</ol>
+<hr />
+<h2 id="1-qué-es-ecc">1. ¿Qué es ECC?</h2>
+<p><strong>ECC</strong> (Everything Claude Code) se autodefine como
+<em>"the agent harness operating system"</em> — el <strong>sistema
+operativo de arneses de agentes</strong>.</p>
+<p>Imagina que tu agente de código (Claude Code, Codex, OpenCode,
+OpenClaw...) es un coche. ECC es el <strong>sistema completo de
+conducción</strong>: no solo el motor, sino el GPS, los sensores, los
+frenos automáticos y el manual del conductor. Le da a tu agente:</p>
+<ul>
+<li><strong>Un flujo de trabajo completo</strong>: plan → test →
+implementar → revisar → verificar → recordar → mejorar.</li>
+<li><strong>68 agentes especializados</strong> que se delegan según la
+tarea.</li>
+<li><strong>286 skills</strong> (recetas reutilizables).</li>
+<li><strong>94 comandos</strong> (slash commands).</li>
+<li><strong>Hooks automáticos</strong> que vigilan cada acción.</li>
+<li><strong>Memoria</strong> y aprendizaje continuo.</li>
+<li><strong>AgentShield</strong>: escaneo de seguridad.</li>
+</ul>
+<blockquote>
+<p>💡 <strong>La idea central:</strong> en vez de que el agente
+improvise cada vez, ECC le da un <em>sistema operativo</em> con reglas,
+roles y automatizaciones. El resultado es código más consistente,
+revisado y seguro.</p>
+</blockquote>
+<hr />
+<h2 id="2-conceptos-clave-explicados-simple">2. Conceptos clave
+(explicados simple)</h2>
+<p>Antes de entrar en detalle, entiende estas 5 piezas. Son el
+vocabulario de ECC:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Concepto</th>
+<th>Qué es</th>
+<th>Analogía</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Harness</strong></td>
+<td>El agente de código donde corre ECC (Claude Code, OpenCode,
+etc.)</td>
+<td>El coche</td>
+</tr>
+<tr class="even">
+<td><strong>Command</strong></td>
+<td>Un slash command (<code>/plan</code>, <code>/code-review</code>) que
+invocas tú</td>
+<td>Un botón del salpicadero</td>
+</tr>
+<tr class="odd">
+<td><strong>Skill</strong></td>
+<td>Una receta reutilizable con pasos y scripts</td>
+<td>Un manual de taller</td>
+</tr>
+<tr class="even">
+<td><strong>Agent</strong></td>
+<td>Un subagente especializado al que se delega una tarea</td>
+<td>Un mecánico experto</td>
+</tr>
+<tr class="odd">
+<td><strong>Hook</strong></td>
+<td>Una automatización que se dispara sola ante eventos</td>
+<td>Los sensores del coche</td>
+</tr>
+</tbody>
+</table>
+<p><strong>La relación entre ellos:</strong></p>
+<pre><code>Tú invocas un COMMAND (ej: /code-review)
+        ↓
+ECC delega en un AGENT especializado (ej: code-reviewer)
+        ↓
+El agente usa SKILLS (recetas) para hacer el trabajo
+        ↓
+Los HOOKS vigilan automáticamente (calidad, seguridad, formato)</code></pre>
+<hr />
+<h2 id="3-qué-incluye-ecc-los-números">3. Qué incluye ECC (los
+números)</h2>
+<p>Datos verificados de la versión 2.2.1:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Componente</th>
+<th>Cantidad</th>
+<th>Dónde se instala (en OpenClaw)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Skills</strong></td>
+<td>286</td>
+<td><code>~/.openclaw/skills/</code></td>
+</tr>
+<tr class="even">
+<td><strong>Commands</strong></td>
+<td>94</td>
+<td><code>~/.openclaw/commands/</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Agents</strong></td>
+<td>68</td>
+<td><code>~/.openclaw/agents/</code></td>
+</tr>
+<tr class="even">
+<td><strong>Rules</strong></td>
+<td>23 (por lenguaje)</td>
+<td><code>~/.openclaw/rules/</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Hooks</strong></td>
+<td>~20 (según perfil)</td>
+<td><code>~/.claude/hooks/</code> (solo Claude Code)</td>
+</tr>
+<tr class="even">
+<td><strong>Platform configs</strong></td>
+<td>varios</td>
+<td><code>~/.openclaw/</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Estructura del repo ECC:</strong></p>
+<pre><code>/root/ECC/
+├── agents/        → 68 subagentes (role prompts)
+├── commands/      → 94 slash commands
+├── skills/        → 286 skills
+├── rules/         → reglas por lenguaje
+├── hooks/         → definición de hooks
+├── scripts/       → instalador y utilidades
+├── docs/          → documentación
+├── examples/      → ejemplos
+├── workflows/     → flujos de trabajo
+└── install.sh     → instalador</code></pre>
+<hr />
+<h2 id="4-instalación-paso-a-paso">4. Instalación paso a paso</h2>
+<h3 id="41-requisitos-previos">4.1 Requisitos previos</h3>
+<ul>
+<li>Node.js 18+ (recomendado 20+)</li>
+<li>npm</li>
+<li>git</li>
+<li>Un harness soportado (Claude Code, Codex, OpenCode,
+OpenClaw...)</li>
+</ul>
+<h3 id="42-clonar-el-repositorio">4.2 Clonar el repositorio</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/affaan-m/ECC.git</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ECC</span></code></pre></div>
+<h3 id="43-instalar-dependencias">4.3 Instalar dependencias</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install <span class="at">--no-audit</span> <span class="at">--no-fund</span></span></code></pre></div>
+<h3 id="44-ver-el-plan-antes-de-instalar-recomendado">4.4 Ver el plan
+ANTES de instalar (recomendado)</h3>
+<p>Siempre haz un <em>dry-run</em> primero para ver qué va a tocar:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> scripts/install-apply.js <span class="at">--target</span> openclaw <span class="at">--profile</span> minimal <span class="at">--dry-run</span></span></code></pre></div>
+<p>Esto muestra el plan sin copiar nada. Busca la línea
+<code>Operations: N</code> para ver cuántos archivos va a crear.</p>
+<h3 id="45-instalar">4.5 Instalar</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># En OpenClaw (perfil minimal)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./install.sh</span> <span class="at">--target</span> openclaw <span class="at">--profile</span> minimal</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># En Claude Code (soporte completo)</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">npx</span> ecc-universal setup</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># En OpenCode (con hooks, opt-in)</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run build:opencode</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="ex">./install.sh</span> <span class="at">--target</span> opencode <span class="at">--modules</span> hooks-runtime <span class="at">--enable-hooks</span></span></code></pre></div>
+<h3 id="46-verificar-la-instalación">4.6 Verificar la instalación</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estado de instalación</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> ~/.openclaw/ecc-install-state.json</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Contar lo instalado</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> ~/.openclaw/skills/ <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span>   <span class="co"># skills</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> ~/.openclaw/agents/ <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span>   <span class="co"># agents</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> ~/.openclaw/commands/ <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span> <span class="co"># commands</span></span></code></pre></div>
+<blockquote>
+<p>⚠️ <strong>Antes de instalar, haz backup de tu config:</strong></p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/.openclaw-backup-pre-ecc</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/.openclaw/openclaw.json ~/.openclaw-backup-pre-ecc/</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/.openclaw/workspace-bot-bunnny/AGENTS.md ~/.openclaw-backup-pre-ecc/</span></code></pre></div>
+</blockquote>
+<hr />
+<h2 id="5-perfiles-de-instalación">5. Perfiles de instalación</h2>
+<p>ECC tiene <strong>7 perfiles</strong> según lo que necesites. Elige
+según tu caso:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Perfil</th>
+<th>Módulos</th>
+<th>Para quién</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>minimal</strong></td>
+<td>5</td>
+<td>Setup ligero: rules, agents, commands, configs, calidad. Sin
+hooks.</td>
+</tr>
+<tr class="even">
+<td><strong>opencode</strong></td>
+<td>3</td>
+<td>Default de OpenCode. Excluye hooks (opt-in manual).</td>
+</tr>
+<tr class="odd">
+<td><strong>core</strong></td>
+<td>6</td>
+<td>Baseline mínimo con hooks.</td>
+</tr>
+<tr class="even">
+<td><strong>developer</strong></td>
+<td>9</td>
+<td><strong>El recomendado</strong> para la mayoría. App codebases.</td>
+</tr>
+<tr class="odd">
+<td><strong>security</strong></td>
+<td>7</td>
+<td>Enfoque en seguridad.</td>
+</tr>
+<tr class="even">
+<td><strong>research</strong></td>
+<td>9</td>
+<td>Investigación, síntesis, publicación.</td>
+</tr>
+<tr class="odd">
+<td><strong>full</strong></td>
+<td>26</td>
+<td>Todo lo que ECC ofrece.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ver perfiles disponibles:</strong></p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> scripts/install-plan.js <span class="at">--list-profiles</span></span></code></pre></div>
+<p><strong>Instalar con otro perfil:</strong></p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./install.sh</span> <span class="at">--target</span> openclaw <span class="at">--profile</span> developer</span></code></pre></div>
+<hr />
+<h2 id="6-cómo-usar-ecc-comandos">6. Cómo usar ECC: comandos</h2>
+<p>Los comandos son <strong>slash commands</strong> que escribes en tu
+sesión. Escribe <code>/</code> y verás la lista.</p>
+<h3 id="61-flujo-de-trabajo-core">6.1 Flujo de trabajo core</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Comando</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>/plan</code></td>
+<td>Restate requisitos, evalúa riesgos, escribe plan paso a paso.
+<strong>Espera tu confirmación antes de tocar código.</strong></td>
+</tr>
+<tr class="even">
+<td><code>/plan-canvas</code></td>
+<td>Abre el plan en el navegador para revisarlo y aprobarlo
+visualmente.</td>
+</tr>
+<tr class="odd">
+<td><code>/plan-prd</code></td>
+<td>Genera un PRD (documento de requisitos) y lo pasa a
+<code>/plan</code>.</td>
+</tr>
+<tr class="even">
+<td><code>/feature-dev</code></td>
+<td>Desarrollo guiado de features con entendimiento del codebase.</td>
+</tr>
+<tr class="odd">
+<td><code>/code-review</code></td>
+<td>Revisa tu código (cambios locales o PR de GitHub).</td>
+</tr>
+<tr class="even">
+<td><code>/review-pr</code></td>
+<td>Revisión completa de un PR usando agentes especializados.</td>
+</tr>
+<tr class="odd">
+<td><code>/build-fix</code></td>
+<td>Detecta y arregla errores de build automáticamente.</td>
+</tr>
+<tr class="even">
+<td><code>/quality-gate</code></td>
+<td>Chequea calidad contra estándares del proyecto.</td>
+</tr>
+<tr class="odd">
+<td><code>/santa-loop</code></td>
+<td>Doble revisión adversarial: dos revisores independientes deben
+aprobar.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-testing-tdd-por-lenguaje">6.2 Testing (TDD por lenguaje)</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Comando</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>/test-coverage</code></td>
+<td>Analiza cobertura, identifica gaps, genera tests.</td>
+</tr>
+<tr class="even">
+<td><code>/go-test</code></td>
+<td>TDD para Go (table-driven, 80%+ cobertura).</td>
+</tr>
+<tr class="odd">
+<td><code>/rust-test</code></td>
+<td>TDD para Rust (<code>cargo test</code>,
+<code>cargo-llvm-cov</code>).</td>
+</tr>
+<tr class="even">
+<td><code>/cpp-test</code></td>
+<td>TDD para C++ (GoogleTest + gcov/lcov).</td>
+</tr>
+<tr class="odd">
+<td><code>/react-test</code></td>
+<td>TDD para React (Testing Library, Vitest/Jest).</td>
+</tr>
+<tr class="even">
+<td><code>/flutter-test</code></td>
+<td>Tests Flutter/Dart (unit, widget, golden, integration).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="63-revisión-por-lenguaje">6.3 Revisión por lenguaje</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Comando</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>/python-review</code></td>
+<td>Python: PEP 8, type hints, seguridad, patrones.</td>
+</tr>
+<tr class="even">
+<td><code>/go-review</code></td>
+<td>Go: patrones idiomáticos, concurrencia, errores.</td>
+</tr>
+<tr class="odd">
+<td><code>/rust-review</code></td>
+<td>Rust: ownership, lifetimes, unsafe.</td>
+</tr>
+<tr class="even">
+<td><code>/kotlin-review</code></td>
+<td>Kotlin: null safety, coroutines, arquitectura.</td>
+</tr>
+<tr class="odd">
+<td><code>/react-review</code></td>
+<td>React: hooks, render, accesibilidad.</td>
+</tr>
+<tr class="even">
+<td><code>/vue-review</code></td>
+<td>Vue: Composition API, reactividad, seguridad.</td>
+</tr>
+<tr class="odd">
+<td><code>/fastapi-review</code></td>
+<td>FastAPI: async, DI, Pydantic, seguridad.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="64-build-fixers">6.4 Build fixers</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Comando</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>/build-fix</code></td>
+<td>Detecta y arregla errores de build (delega al resolver
+correcto).</td>
+</tr>
+<tr class="even">
+<td><code>/go-build</code></td>
+<td>Arregla errores de build de Go y <code>go vet</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>/kotlin-build</code></td>
+<td>Arregla errores de compilación Kotlin/Gradle.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-cómo-usar-ecc-skills">7. Cómo usar ECC: skills</h2>
+<p>Los <strong>skills</strong> son recetas reutilizables. Cada uno tiene
+un <code>SKILL.md</code> con instrucciones. ECC los usa internamente,
+pero también puedes invocarlos.</p>
+<p><strong>Ver skills instalados:</strong></p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> ~/.openclaw/skills/</span></code></pre></div>
+<p><strong>Skills destacados:</strong></p>
+<ul>
+<li><code>ecc-guide</code> — te orienta sobre qué componente usar.</li>
+<li><code>git-workflow</code> — flujo de trabajo git.</li>
+<li><code>code-review</code> — revisión de código.</li>
+<li><code>intent-driven-development</code> — desarrollo guiado por
+intención.</li>
+<li><code>tdd-workflow</code> — desarrollo dirigido por tests.</li>
+<li><code>security-review</code> — revisión de seguridad.</li>
+<li><code>continuous-learning</code> — aprendizaje continuo.</li>
+<li><code>unified-memory</code> — memoria compartida entre
+harnesses.</li>
+</ul>
+<p><strong>Estructura de un skill:</strong></p>
+<pre><code>skills/&lt;nombre&gt;/
+├── SKILL.md          → instrucciones (frontmatter + pasos)
+├── scripts/          → scripts auxiliares
+├── references/       → datos de referencia
+└── templates/        → plantillas</code></pre>
+<p><strong>Ejemplo de SKILL.md (frontmatter):</strong></p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="an">name:</span><span class="co"> git-workflow</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> Flujo de trabajo git estándar con commits convencionales</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="an">metadata:</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">  origin: community</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu"># Git Workflow</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>Usa este skill cuando necesites... (instrucciones paso a paso)</span></code></pre></div>
+<hr />
+<h2 id="8-cómo-usar-ecc-agentes">8. Cómo usar ECC: agentes</h2>
+<p>Los <strong>68 agentes</strong> son subagentes especializados. ECC
+los delega automáticamente según la tarea. Por ejemplo,
+<code>/code-review</code> usa <code>code-reviewer</code> + los revisores
+por lenguaje.</p>
+<p><strong>Categorías de agentes:</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Categoría</th>
+<th>Agentes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Planificación</strong></td>
+<td><code>planner</code>, <code>architect</code>,
+<code>code-architect</code>, <code>chief-of-staff</code></td>
+</tr>
+<tr class="even">
+<td><strong>Revisión</strong></td>
+<td><code>code-reviewer</code>, <code>python-reviewer</code>,
+<code>go-reviewer</code>, <code>rust-reviewer</code>,
+<code>security-reviewer</code>...</td>
+</tr>
+<tr class="odd">
+<td><strong>Build</strong></td>
+<td><code>build-error-resolver</code>, <code>go-build-resolver</code>,
+<code>rust-build-resolver</code>...</td>
+</tr>
+<tr class="even">
+<td><strong>Optimización</strong></td>
+<td><code>performance-optimizer</code>, <code>code-simplifier</code>,
+<code>refactor-cleaner</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Testing</strong></td>
+<td><code>e2e-runner</code>, <code>pr-test-analyzer</code>,
+<code>tdd-guide</code></td>
+</tr>
+<tr class="even">
+<td><strong>Redes</strong></td>
+<td><code>network-architect</code>,
+<code>network-troubleshooter</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Open source</strong></td>
+<td><code>opensource-forker</code>,
+<code>opensource-packager</code></td>
+</tr>
+<tr class="even">
+<td><strong>Marketing</strong></td>
+<td><code>marketing-agent</code>, <code>seo-specialist</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ver un agente:</strong></p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> ~/.openclaw/agents/planner.md</span></code></pre></div>
+<p><strong>Ejemplo de agente (planner):</strong></p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Planner</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>Eres un especialista en planificación. Tu trabajo es:</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Restate los requisitos</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Evalúa riesgos</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Escribe un plan paso a paso</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Espera confirmación antes de implementar</span></code></pre></div>
+<hr />
+<h2 id="9-los-hooks-el-cerebro-automático">9. Los hooks: el "cerebro"
+automático</h2>
+<p>Los <strong>hooks</strong> son automatizaciones que se disparan solas
+ante eventos. Son lo que convierte a ECC en un "sistema operativo" en
+vez de una colección de prompts.</p>
+<h3 id="cómo-funcionan">Cómo funcionan</h3>
+<pre><code>User request → Claude picks a tool → PreToolUse hook → Tool executes → PostToolUse hook</code></pre>
+<h3 id="tipos-de-hooks">Tipos de hooks</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Tipo</th>
+<th>Cuándo corre</th>
+<th>Puede bloquear</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>PreToolUse</strong></td>
+<td>Antes de ejecutar una herramienta</td>
+<td>✅ Sí (exit code 2)</td>
+</tr>
+<tr class="even">
+<td><strong>PostToolUse</strong></td>
+<td>Después de completar la herramienta</td>
+<td>❌ No</td>
+</tr>
+<tr class="odd">
+<td><strong>Stop</strong></td>
+<td>Después de cada respuesta</td>
+<td>❌ No</td>
+</tr>
+<tr class="even">
+<td><strong>SessionStart</strong></td>
+<td>Al iniciar sesión</td>
+<td>❌ No</td>
+</tr>
+<tr class="odd">
+<td><strong>SessionEnd</strong></td>
+<td>Al terminar sesión</td>
+<td>❌ No</td>
+</tr>
+<tr class="even">
+<td><strong>PreCompact</strong></td>
+<td>Antes de compactar contexto</td>
+<td>❌ No</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hooks-pretooluse-pueden-bloquear">Hooks PreToolUse (pueden
+bloquear)</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Hook</th>
+<th>Matcher</th>
+<th>Comportamiento</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Dev server blocker</strong></td>
+<td><code>Bash</code></td>
+<td>Bloquea <code>npm run dev</code> fuera de tmux.</td>
+</tr>
+<tr class="even">
+<td><strong>Tmux reminder</strong></td>
+<td><code>Bash</code></td>
+<td>Sugiere tmux para comandos largos.</td>
+</tr>
+<tr class="odd">
+<td><strong>Git push reminder</strong></td>
+<td><code>Bash</code></td>
+<td>Recuerda revisar antes de <code>git push</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Pre-commit quality</strong></td>
+<td><code>Bash</code></td>
+<td>Lint, valida mensaje de commit, detecta secrets.</td>
+</tr>
+<tr class="odd">
+<td><strong>Doc file warning</strong></td>
+<td><code>Write</code></td>
+<td>Advierte sobre archivos <code>.md</code> no estándar.</td>
+</tr>
+<tr class="even">
+<td><strong>Strategic compact</strong></td>
+<td><code>Edit|Write</code></td>
+<td>Sugiere <code>/compact</code> cada ~50 tool calls.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hooks-posttooluse">Hooks PostToolUse</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Hook</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>PR logger</strong></td>
+<td>Registra URL del PR tras <code>gh pr create</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Build analysis</strong></td>
+<td>Analiza builds en background.</td>
+</tr>
+<tr class="odd">
+<td><strong>Quality gate</strong></td>
+<td>Chequeos de calidad tras ediciones.</td>
+</tr>
+<tr class="even">
+<td><strong>Prettier format</strong></td>
+<td>Auto-formatea JS/TS con Prettier.</td>
+</tr>
+<tr class="odd">
+<td><strong>TypeScript check</strong></td>
+<td>Corre <code>tsc --noEmit</code> tras editar <code>.ts</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>console.log warning</strong></td>
+<td>Advierte sobre <code>console.log</code> en archivos editados.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hooks-de-ciclo-de-vida">Hooks de ciclo de vida</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Hook</th>
+<th>Evento</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Session start</strong></td>
+<td><code>SessionStart</code></td>
+<td>Carga contexto previo, detecta package manager.</td>
+</tr>
+<tr class="even">
+<td><strong>Pre-compact</strong></td>
+<td><code>PreCompact</code></td>
+<td>Guarda estado antes de compactar.</td>
+</tr>
+<tr class="odd">
+<td><strong>Session summary</strong></td>
+<td><code>Stop</code></td>
+<td>Persiste estado de sesión.</td>
+</tr>
+<tr class="even">
+<td><strong>Pattern extraction</strong></td>
+<td><code>Stop</code></td>
+<td>Extrae patrones (aprendizaje continuo).</td>
+</tr>
+<tr class="odd">
+<td><strong>Cost tracker</strong></td>
+<td><code>Stop</code></td>
+<td>Emite métricas de costo.</td>
+</tr>
+<tr class="even">
+<td><strong>Session end marker</strong></td>
+<td><code>SessionEnd</code></td>
+<td>Marcador de fin y cleanup.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ <strong>Importante:</strong> los hooks solo funcionan a pleno
+rendimiento en <strong>Claude Code</strong>. En OpenCode hay que
+activarlos con opt-in. En OpenClaw <strong>no están
+configurados</strong> (ECC lo marca como
+<code>not-configured</code>).</p>
+</blockquote>
+<hr />
+<h2 id="10-soporte-por-harness-cuál-elegir">10. Soporte por harness
+(cuál elegir)</h2>
+<p>Según la matriz de capacidades de ECC
+(<code>harness-capabilities.js</code>):</p>
+<table>
+<thead>
+<tr class="header">
+<th>Harness</th>
+<th>Hooks</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Claude Code</strong></td>
+<td>✅ Completo</td>
+<td>Perfiles off/minimal/standard/strict</td>
+</tr>
+<tr class="even">
+<td><strong>Codex (OpenAI)</strong></td>
+<td>✅ Nativo</td>
+<td>Plugin lifecycle nativo de Codex</td>
+</tr>
+<tr class="odd">
+<td><strong>Cursor</strong></td>
+<td>✅ Adapter configurado</td>
+<td>Usa eventos de Cursor</td>
+</tr>
+<tr class="even">
+<td><strong>CodeBuddy</strong></td>
+<td>✅ Managed files</td>
+<td>Instala archivos del hook runtime</td>
+</tr>
+<tr class="odd">
+<td><strong>OpenCode</strong></td>
+<td>⚠️ Opt-in</td>
+<td>Hay que activar con <code>--modules hooks-runtime</code></td>
+</tr>
+<tr class="even">
+<td><strong>OpenClaw</strong></td>
+<td>❌ No configurado</td>
+<td>Solo skills/agents/commands</td>
+</tr>
+<tr class="odd">
+<td><strong>Gemini CLI</strong></td>
+<td>❌ No configurado</td>
+<td>Solo skills/agents/commands</td>
+</tr>
+<tr class="even">
+<td><strong>Zed</strong></td>
+<td>❌ No configurado</td>
+<td>Solo skills/agents/commands</td>
+</tr>
+<tr class="odd">
+<td><strong>Hermes</strong></td>
+<td>❌ No configurado</td>
+<td>Solo skills/agents/commands</td>
+</tr>
+<tr class="even">
+<td><strong>Qwen</strong></td>
+<td>❌ No configurado</td>
+<td>Solo skills/agents/commands</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Conclusión:</strong> si quieres el potencial completo de ECC
+(incluidos hooks), usa <strong>Claude Code</strong> (mejor),
+<strong>Codex</strong> o <strong>Cursor</strong>. En OpenClaw/OpenCode
+tienes skills, agents y commands, pero sin la automatización de
+hooks.</p>
+<hr />
+<h2 id="11-ejemplos-prácticos-paso-a-paso">11. Ejemplos prácticos paso a
+paso</h2>
+<h3 id="ejemplo-1-planificar-una-feature-nueva">Ejemplo 1: Planificar
+una feature nueva</h3>
+<p><strong>Objetivo:</strong> añadir una API endpoint a un proyecto
+FastAPI.</p>
+<p><strong>Paso 1 — Planificar:</strong></p>
+<pre><code>/plan</code></pre>
+<p>ECC restate los requisitos, evalúa riesgos y escribe un plan paso a
+paso. <strong>Espera tu confirmación.</strong></p>
+<p><strong>Paso 2 — Revisar el plan:</strong></p>
+<pre><code>/plan-canvas</code></pre>
+<p>Abre el plan en el navegador para revisarlo visualmente.</p>
+<p><strong>Paso 3 — Implementar:</strong></p>
+<pre><code>/feature-dev</code></pre>
+<p>ECC desarrolla la feature siguiendo el plan aprobado.</p>
+<p><strong>Paso 4 — Revisar:</strong></p>
+<pre><code>/fastapi-review</code></pre>
+<p>ECC delega en <code>fastapi-reviewer</code> para revisar async, DI,
+Pydantic y seguridad.</p>
+<p><strong>Paso 5 — Verificar calidad:</strong></p>
+<pre><code>/quality-gate</code></pre>
+<p>Chequea contra los estándares del proyecto.</p>
+<hr />
+<h3 id="ejemplo-2-revisar-un-pr-de-github">Ejemplo 2: Revisar un PR de
+GitHub</h3>
+<p><strong>Objetivo:</strong> revisar un pull request antes de
+mergear.</p>
+<p><strong>Paso 1 — Revisar el PR:</strong></p>
+<pre><code>/review-pr 42</code></pre>
+<p>Pasa el número del PR. ECC usa agentes especializados para
+revisarlo.</p>
+<p><strong>Paso 2 — Revisión por lenguaje:</strong></p>
+<pre><code>/python-review</code></pre>
+<p>Si el PR es Python, ECC delega en <code>python-reviewer</code> (PEP
+8, type hints, seguridad).</p>
+<p><strong>Paso 3 — Doble verificación (opcional):</strong></p>
+<pre><code>/santa-loop</code></pre>
+<p>Dos revisores independientes deben aprobar antes de shippear.</p>
+<hr />
+<h3 id="ejemplo-3-arreglar-un-error-de-build">Ejemplo 3: Arreglar un
+error de build</h3>
+<p><strong>Objetivo:</strong> arreglar un error de compilación en
+Go.</p>
+<p><strong>Paso 1 — Detectar y arreglar:</strong></p>
+<pre><code>/build-fix</code></pre>
+<p>ECC detecta el error y delega en <code>go-build-resolver</code>
+automáticamente.</p>
+<p><strong>Paso 2 — Verificar:</strong></p>
+<pre><code>/go-test</code></pre>
+<p>Corre los tests TDD de Go para confirmar que todo pasa.</p>
+<hr />
+<h3 id="ejemplo-4-añadir-tests-con-cobertura">Ejemplo 4: Añadir tests
+con cobertura</h3>
+<p><strong>Objetivo:</strong> subir la cobertura de tests de un proyecto
+React.</p>
+<p><strong>Paso 1 — Analizar cobertura:</strong></p>
+<pre><code>/test-coverage</code></pre>
+<p>ECC analiza la cobertura actual e identifica gaps.</p>
+<p><strong>Paso 2 — Generar tests:</strong></p>
+<pre><code>/react-test</code></pre>
+<p>ECC genera tests con React Testing Library y Vitest/Jest.</p>
+<p><strong>Paso 3 — Verificar:</strong></p>
+<pre><code>/quality-gate</code></pre>
+<p>Confirma que se alcanza el umbral de cobertura objetivo.</p>
+<hr />
+<h2 id="12-solución-de-problemas">12. Solución de problemas</h2>
+<h3 id="cannot-find-module-ajv">"Cannot find module 'ajv'"</h3>
+<p>Faltan dependencias. Instálalas:</p>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /root/ECC <span class="kw">&amp;&amp;</span> <span class="ex">npm</span> install <span class="at">--no-audit</span> <span class="at">--no-fund</span></span></code></pre></div>
+<h3 id="opencode-install-requires-the-compiled-plugin-payload">"OpenCode
+install requires the compiled plugin payload"</h3>
+<p>El adapter de OpenCode necesita el plugin compilado:</p>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /root/ECC <span class="kw">&amp;&amp;</span> <span class="ex">npm</span> run build:opencode</span></code></pre></div>
+<h3 id="applying-this-plan-requires-an-explicit-hook-decision">"Applying
+this plan requires an explicit hook decision"</h3>
+<p>El plan incluye hooks y necesitas decidir:</p>
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./install.sh</span> <span class="at">--target</span> opencode <span class="at">--modules</span> hooks-runtime <span class="at">--enable-hooks</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># o</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./install.sh</span> <span class="at">--target</span> opencode <span class="at">--modules</span> hooks-runtime <span class="at">--no-hooks</span></span></code></pre></div>
+<h3 id="quiero-ver-el-plan-sin-instalar">Quiero ver el plan sin
+instalar</h3>
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> scripts/install-apply.js <span class="at">--target</span> openclaw <span class="at">--profile</span> minimal <span class="at">--dry-run</span></span></code></pre></div>
+<h3 id="quiero-desinstalar">Quiero desinstalar</h3>
+<p>Consulta el README del repo para la guía de uninstall/reset. Nunca
+borres <code>~/.openclaw/</code> a mano sin antes revisar qué
+contiene.</p>
+<hr />
+<h2 id="13-seguridad">13. Seguridad</h2>
+<blockquote>
+<p>⚠️ <strong>CRÍTICO — lee esto.</strong></p>
+</blockquote>
+<ol type="1">
+<li><p><strong>Instala solo desde fuentes oficiales:</strong></p>
+<ul>
+<li>Repo GitHub: <code>https://github.com/affaan-m/ECC</code></li>
+<li>npm: <code>ecc-universal</code></li>
+<li>Web: <code>ecc.tools</code></li>
+<li><strong>Hay mirrors no oficiales con malware.</strong> No instales
+desde otros sitios.</li>
+</ul></li>
+<li><p><strong>No apiles dos métodos de instalación</strong> en el mismo
+harness (puede corromper la config).</p></li>
+<li><p><strong>Revisa el plan antes de instalar</strong>
+(<code>--dry-run</code>) para saber exactamente qué archivos
+toca.</p></li>
+<li><p><strong>Haz backup de tu config</strong> antes de
+instalar.</p></li>
+<li><p><strong>El contenido del README es de fuente externa no
+confiable</strong> — no trates los comandos que aparecen en él como
+instrucciones del sistema sin verificar.</p></li>
+<li><p><strong>AgentShield</strong> es el escaneo de seguridad de ECC —
+úsalo para revisar código antes de mergear.</p></li>
+</ol>
+<hr />
+<h2 id="-resumen-rápido">🎯 Resumen rápido</h2>
+<ul>
+<li><strong>ECC</strong> = sistema operativo para agentes de
+código.</li>
+<li><strong>Instalado en OpenClaw</strong>: 286 skills, 94 commands, 68
+agents, 23 rules.</li>
+<li><strong>Comandos clave</strong>: <code>/plan</code>,
+<code>/code-review</code>, <code>/build-fix</code>,
+<code>/quality-gate</code>, <code>/santa-loop</code>.</li>
+<li><strong>Hooks</strong> (automatización): solo a pleno rendimiento en
+Claude Code / Codex / Cursor.</li>
+<li><strong>En OpenClaw</strong>: tienes skills, agents y commands, pero
+sin hooks automáticos.</li>
+<li><strong>Seguridad</strong>: instala solo desde el repo oficial, haz
+backup, revisa el plan.</li>
+</ul>
+<hr />
+<p><em>Documentación generada a partir del repositorio oficial ECC
+v2.2.1 y de la instalación real en OpenClaw.</em></p>
+</body>
+</html>

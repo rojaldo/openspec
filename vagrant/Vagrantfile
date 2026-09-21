@@ -1,0 +1,45 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+#
+# Ubuntu VM con herramientas de desarrollo/IA
+# Uso:
+#   vagrant up          -> crea y provisiona la VM
+#   vagrant ssh         -> entras a la máquina
+#   vagrant destroy     -> la tiras (se reconstruye igual con vagrant up)
+#
+# Nota: la lista de herramientas está en provision.sh, ahí la editas fácil.
+
+Vagrant.configure("2") do |config|
+  # ---------- Caja base: Ubuntu 24.04 LTS (Noble) ----------
+  config.vm.box = "ubuntu/jammy64"          # 22.04, muy estable con VirtualBox
+  # Alternativa 24.04: "bento/ubuntu-24.04" (más nuevo, puede tardar más)
+
+  config.vm.hostname = "devbox"
+
+  # ---------- Red / puertos ----------
+  # Puerta de entrada por red privada (IP fija) + redirección de puertos
+  config.vm.network "private_network", ip: "192.168.56.10"
+  config.vm.network "forwarded_port", guest: 80,  host: 8080,  auto_correct: true
+  config.vm.network "forwarded_port", guest: 3000, host: 3000, auto_correct: true
+  config.vm.network "forwarded_port", guest: 5901, host: 5901, auto_correct: true  # VNC (XFCE)
+
+  # ---------- Recursos ----------
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "6144"   # 6 GB de RAM (escritorio + herramientas; ajústalo a lo que tengas)
+    vb.cpus   = 2        # 2 CPUs
+    vb.name   = "devbox-ubuntu"
+    # Mostrar la interfaz gráfica en la ventana de VirtualBox (XFCE)
+    vb.gui = true
+  end
+
+  # ---------- Provisioning ----------
+  # Pasa el script de instalación de herramientas
+  config.vm.provision "shell", path: "provision.sh"
+
+  # Mensaje bonito al terminar
+  config.vm.post_up_message = <<-MSG
+    ✅ VM lista. Entra con:  vagrant ssh
+    🖥️  Escritorio XFCE: ventana de VirtualBox o VNC -> vncviewer 192.168.56.10:5901
+    Herramientas instaladas según provision.sh
+  MSG
+end
