@@ -1,0 +1,10 @@
+# Godot: artefactos regenerados (los .import y .uid SÍ se versionan).
+.godot/
+
+# Estado local de herramientas (sesión de agentes / índice de código).
+.omo/
+.codegraph
+
+# Sistema operativo.
+.DS_Store
+Thumbs.db

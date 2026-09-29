@@ -1,0 +1,6 @@
+<svg width="480" height="720" xmlns="http://www.w3.org/2000/svg">
+<defs><pattern id="ht" width="13" height="13" patternUnits="userSpaceOnUse">
+<circle cx="2" cy="2" r="1.7" fill="#000" opacity="0.11"/></pattern></defs>
+<rect width="480" height="720" fill="#fdf6e3"/>
+<rect width="480" height="720" fill="url(#ht)"/>
+<rect x="10" y="10" width="460" height="700" fill="none" stroke="#14110f" stroke-width="6"/></svg>

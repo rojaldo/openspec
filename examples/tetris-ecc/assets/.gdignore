@@ -1,0 +1,4 @@
+# Fuentes SVG editables del pack (bloques, piezas, sfx, fondos).
+# El juego consume los PNG de textures/, nunca estos SVG, así que no se importan.
+# (Se verificó que NO hace falta para evitar el crash de importación de Godot 4.7:
+#  ese crash lo causaban los .import generados para 4.2 que traía el pack.)

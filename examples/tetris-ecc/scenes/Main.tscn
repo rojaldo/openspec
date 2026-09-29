@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://tetriscomicecc001"]
+
+[ext_resource type="Script" path="res://scripts/game_controller.gd" id="1_ctrl"]
+[ext_resource type="Texture2D" path="res://textures/bg_sky_pop.png" id="2_bg"]
+[ext_resource type="Script" path="res://scripts/board_view.gd" id="3_view"]
+[ext_resource type="Script" path="res://scripts/sfx_popup.gd" id="4_sfx"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="5_hud"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_ctrl")
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(240, 360)
+texture = ExtResource("2_bg")
+
+[node name="BoardView" type="Node2D" parent="."]
+position = Vector2(16, 40)
+script = ExtResource("3_view")
+
+[node name="SfxLayer" type="Node2D" parent="."]
+position = Vector2(176, 680)
+script = ExtResource("4_sfx")
+
+[node name="Hud" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("5_hud")
