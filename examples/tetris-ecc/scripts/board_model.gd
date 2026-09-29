@@ -38,6 +38,13 @@ var score_observer: ScoreObserver = null
 var _factory: PieceFactory
 var _canvas: Object = null      ## Receptor del patrón Command (la vista).
 var active: Piece = null
+## Pieza SIGUIENTE ya creada por el Factory. Se conserva el OBJETO (no solo el
+## tipo) para que al depositar la activa se use ESTA MISMA pieza: así lo que
+## anuncia el NEXT (Command) es exactamente lo que aparece. Antes se guardaba
+## solo el tipo y se volvía a tirar del Factory, descartando el objeto visto
+## previa -> el NEXT mentía.
+var _next_piece: Piece = null
+## Tipo de `_next_piece` (lo que comunica el patrón Command al canvas).
 var next_type := ""
 # NOTA (A2): el modelo NO guarda ningún flag de fin de partida. Solo DETECTA el
 # desbordamiento y emite la señal `game_over`; el estado lo mantiene el FSM
@@ -51,10 +58,11 @@ func _init(factory: PieceFactory, builder: LineBuilder, subject: LineSubject) ->
 
 ## Arranca la partida: prepara el pipeline de piezas (activa + siguiente).
 func start() -> void:
-	# Primera pieza: Factory (paso 2).
+	# Primera pieza y siguiente: ambas del Factory (paso 2). Se conservan los
+	# objetos completos para no descartar la siguiente.
 	active = _factory.create_next()
-	# Pieza siguiente que se comunicará al canvas (paso 3).
-	next_type = _factory.create_next().type
+	_next_piece = _factory.create_next()
+	next_type = _next_piece.type
 	# 3. Command: informa al canvas cuál es la siguiente pieza a caer.
 	_execute_next_command()
 	_emit_state()
@@ -162,13 +170,16 @@ func _lock_piece() -> void:
 	_spawn_next()
 
 func _spawn_next() -> void:
-	var piece := _factory.create_next()
+	# La pieza que aparece es EXACTAMENTE la que se anunció como siguiente.
+	var piece := _next_piece
 	# ¿Cabe en el buffer? Si no, la pila tapó la zona de aparición -> fin.
 	if not _fits(piece.matrix, piece.pos):
 		_end_game()
 		return
 	active = piece
-	next_type = _factory.create_next().type
+	# Nueva pieza siguiente (el objeto que se jugará después).
+	_next_piece = _factory.create_next()
+	next_type = _next_piece.type
 	# 3. Command: comunica al canvas la nueva pieza siguiente.
 	_execute_next_command()
 	_emit_state()

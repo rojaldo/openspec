@@ -29,6 +29,7 @@ godot --headless --path . --script res://tests/fsm_test.gd          # máquina d
 godot --headless --path . --script res://tests/flow_test.gd         # gobernanza FSM (GameFlow)
 godot --headless --path . --script res://tests/hud_test.gd          # pantallas del HUD
 godot --headless --path . --script res://tests/integration_test.gd  # flujo completo + cableado
+godot --headless --path . --script res://tests/next_piece_test.gd   # regresión: NEXT == pieza que aparece
 ```
 
 ## Patrones de diseño y dónde viven
