@@ -31,6 +31,10 @@ func _ready() -> void:
 	flow.state_changed.connect(_on_flow_state_changed)
 	flow.lines_cleared.connect(_on_flow_lines_cleared)
 
+	# El tablero se coloca desde las constantes del HUD (única fuente de verdad):
+	# así no hay literales sueltos en la escena que puedan desalinearse.
+	view.position = Vector2(ComicHud.BOARD_X, ComicHud.BOARD_TOP)
+
 	# Estado inicial: pantalla de título. El juego aún no existe (START inerte).
 	_apply_state(flow.state())
 
@@ -42,11 +46,26 @@ func _unhandled_input(event: InputEvent) -> void:
 	# Teclas separadas (I3): `start` (Enter) arranca/reinicia; Espacio = hard drop.
 	match flow.state():
 		GameStateMachine.State.START:
-			if _is_press(event, "start"):
-				flow.press_start()
+			# Menú: ↑/↓ mueve la selección; Enter ejecuta la opción.
+			if event.is_action_pressed("ui_up"):
+				hud.menu_move(-1)
+			elif event.is_action_pressed("ui_down"):
+				hud.menu_move(1)
+			elif _is_press(event, "start"):
+				if hud.menu_index() == 1:   # SALIR
+					get_tree().quit()
+				else:                        # JUGAR
+					flow.press_start()
 		GameStateMachine.State.GAME_OVER:
-			if _is_press(event, "start"):
-				flow.press_start()
+			if event.is_action_pressed("ui_up"):
+				hud.menu_move(-1)
+			elif event.is_action_pressed("ui_down"):
+				hud.menu_move(1)
+			elif _is_press(event, "start"):
+				if hud.menu_index() == 1:   # TÍTULO
+					flow.return_to_title()
+				else:                        # REINTENTAR
+					flow.press_start()
 			elif event.is_action_pressed("ui_cancel"):
 				flow.return_to_title()
 		GameStateMachine.State.PLAYING:

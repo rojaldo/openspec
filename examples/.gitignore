@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+portal.db
+web/node_modules/
+web/dist/
+
+# Configuración y skills locales de OpenCode (no se versionan).
+.opencode/
+# Estado local de herramientas (sesión de agentes / índice de código).
+.omo/
+.codegraph

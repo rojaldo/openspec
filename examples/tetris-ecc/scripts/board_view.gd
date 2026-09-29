@@ -50,11 +50,15 @@ func _draw() -> void:
 	if not show_board:
 		return
 	var size := board_size()
-	# Fondo: rejilla de papel cómic del pack (recortada al tamaño del tablero).
+	# Fondo: papel cómic del pack. NO se tilea: el asset es 480x720 y al teselar
+	# en 320x640 se recortaba su marco (borde derecho/inferior desaparecían ->
+	# tablero con marco asimétrico). Se escala y se dibuja un marco simétrico
+	# propio, así el borde es idéntico en los 4 lados.
 	if _bg != null:
-		draw_texture_rect(_bg, Rect2(Vector2.ZERO, size), true)
+		draw_texture_rect(_bg, Rect2(Vector2.ZERO, size), false)
 	else:
 		draw_rect(Rect2(Vector2.ZERO, size), Color("#fdf6e3"), true)
+	draw_rect(Rect2(Vector2.ZERO, size), Color("#14110f"), false, 3.0)
 
 	# Rejilla halftone de puntos (marcas de celda, estilo impresión comic).
 	var dot := Color(0, 0, 0, 0.10)

@@ -1,0 +1,21 @@
+; Configuración de proyecto Godot 4.x — Tetris Comic
+; Abre esta carpeta con Godot 4.2+ ("Import" -> selecciona project.godot)
+config_version=5
+
+[application]
+
+config/name="Tetris Comic"
+run/main_scene="res://scenes/Main.tscn"
+config/features=PackedStringArray("4.2")
+
+[display]
+
+window/size/viewport_width=480
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0  ; 0 = Nearest (nitidez comic)
+renderer/rendering_method="gl_compatibility"

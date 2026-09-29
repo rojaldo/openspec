@@ -48,8 +48,11 @@ func _process(_delta: float) -> bool:
 	_ok(hud.screen == ComicHud.Screen.GAME_OVER, "show_game_over() -> GAME_OVER")
 	_ok(hud.gameover_label != null and hud.gameover_label.visible,
 		"cartel GAME OVER visible y PERSISTENTE en GAME_OVER")
-	_ok(hud.prompt_label.visible and hud.prompt_label.text == ComicHud.RESTART_PROMPT,
-		"prompt de reinicio '%s' visible en GAME_OVER" % ComicHud.RESTART_PROMPT)
+	# El menú comunica las acciones (ya no se duplica con un prompt).
+	_ok(hud.menu_options() == ["REINTENTAR", "TÍTULO"],
+		"GAME_OVER: menú con las acciones %s" % str(hud.menu_options()))
+	_ok(not hud.prompt_label.visible,
+		"GAME_OVER: el prompt no se duplica con el menú")
 	_ok(not hud.gameplay_visible(), "paneles de juego ocultos en GAME_OVER")
 
 	# --- volver a TITLE limpia el cartel persistente ---

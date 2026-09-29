@@ -13,8 +13,9 @@ script = ExtResource("1_ctrl")
 position = Vector2(240, 360)
 texture = ExtResource("2_bg")
 
+; BoardView no fija position aquí: la gobierna el controlador desde
+; ComicHud.BOARD_X / BOARD_TOP (única fuente de verdad de la maquetación).
 [node name="BoardView" type="Node2D" parent="."]
-position = Vector2(16, 40)
 script = ExtResource("3_view")
 
 [node name="SfxLayer" type="Node2D" parent="."]
